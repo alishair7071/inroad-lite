@@ -1,0 +1,22 @@
+Searched 4 queries.
+40 results -> 25 job boards read -> 1 company that fits you
+
+ 1. Schuberg Philis   74 (good)   [greenhouse: schubergphilis]
+    schubergphilis.com  Mission-critical IT has always been at the heart of our work. With 100% uptime, a 99%+ project success rate (35% industry average), and #1 customer satisfaction, we’ve learned that true progress isn’t just about flawless technology.
+    Windows DevOps Automation Engineer   85
+      Role     Matches your target DevOps Engineer
+      Skills   Names Python, Docker, Kubernetes
+      Level    Mid level, fits your 2 years
+      Posted   98 days ago
+      Location Schiphol-Rijk, North Holland, Netherlands, with relocation support
+      https://schubergphilis.com/careers/7809600003?greenhouse=1&gh_jid=7809600003
+
+Left out:
+   19  not open where you can work
+   11  not the role searched for
+    3  posting already closed
+    1  not a Greenhouse, Lever or Ashby link
+    1  job board could not be read
+    1  wrong level for your experience
+
+Olostep: 0 calls, 0 credits, 5 answered from cache.

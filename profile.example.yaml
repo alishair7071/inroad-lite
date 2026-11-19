@@ -1,0 +1,17 @@
+# Who you are and what you are looking for. Copy to profile.yaml and edit.
+roles:                      # up to 4
+  - Backend Engineer
+  - DevOps Engineer
+skills:                     # the first 6 rotate through the searches
+  - Python
+  - Docker
+  - AWS
+  - Kubernetes
+location: Lahore, Pakistan  # "City, Country"
+work_preference:            # remote, onsite, hybrid, relocation
+  - remote
+  - relocation
+relocation_places:          # optional, for relocation searches
+  - Europe
+  - Canada
+years_experience: 2         # optional, used for matching level later

@@ -1,0 +1,424 @@
+{
+  "searches": [
+    "\"Backend Engineer\" Python remote (worldwide OR anywhere OR global OR Pakistan) (site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.ashbyhq.com)",
+    "\"DevOps Engineer\" Docker (\"visa sponsorship\" OR relocation) (Europe OR Canada) (site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.ashbyhq.com)",
+    "\"Backend Engineer\" AWS (\"visa sponsorship\" OR relocation) (Europe OR Canada) (site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.ashbyhq.com)",
+    "\"DevOps Engineer\" Kubernetes remote (worldwide OR anywhere OR global OR Pakistan) (site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.ashbyhq.com)"
+  ],
+  "failed_searches": [],
+  "results_seen": 40,
+  "boards_read": 25,
+  "companies": [
+    {
+      "name": "YipitData",
+      "job_board": "greenhouse: yipitdata",
+      "score": 83,
+      "band": "strong",
+      "website": "yipitdata.com",
+      "about": "YipitData tracks trillions in live consumer and business spend, so you can monitor performance, spot shifts early, and act with confidence.",
+      "best_role": {
+        "title": "Backend Engineer",
+        "url": "https://job-boards.greenhouse.io/yipitdata/jobs/8280705",
+        "score": 97,
+        "band": "strong",
+        "reasons": [
+          {
+            "name": "Role",
+            "detail": "Matches your target Backend Engineer"
+          },
+          {
+            "name": "Skills",
+            "detail": "Names Python, Docker, AWS, Kubernetes"
+          },
+          {
+            "name": "Level",
+            "detail": "Mid level, fits your 2 years"
+          },
+          {
+            "name": "Posted",
+            "detail": "23 days ago"
+          },
+          {
+            "name": "Location",
+            "detail": "India Remote (location not checked)"
+          }
+        ]
+      },
+      "other_roles": []
+    },
+    {
+      "name": "Binance",
+      "job_board": "greenhouse: binance",
+      "score": 79,
+      "band": "strong",
+      "website": "binance.com",
+      "about": null,
+      "best_role": {
+        "title": "DevOps Engineer, Blockchain Infra (Fully Remote)",
+        "url": "https://job-boards.eu.greenhouse.io/binance/jobs/5002663101",
+        "score": 92,
+        "band": "strong",
+        "reasons": [
+          {
+            "name": "Role",
+            "detail": "Matches your target DevOps Engineer"
+          },
+          {
+            "name": "Skills",
+            "detail": "Names Python, Docker, AWS, Kubernetes"
+          },
+          {
+            "name": "Level",
+            "detail": "Mid level, fits your 2 years"
+          },
+          {
+            "name": "Posted",
+            "detail": "36 days ago"
+          },
+          {
+            "name": "Location",
+            "detail": "Australia; Europe; Hong Kong; Malaysia; Singapore; Taiwan; United Arab Emirates; United Kingdom (location not checked)"
+          }
+        ]
+      },
+      "other_roles": []
+    },
+    {
+      "name": "BVNK",
+      "job_board": "greenhouse: bvnk",
+      "score": 79,
+      "band": "strong",
+      "website": "bvnk.com",
+      "about": "Pay out to local bank accounts from stablecoin balances on BVNK Connect your balances to bank accounts via Mastercard Move, across 11 launch currencies, expanding to 40+ in 2027.",
+      "best_role": {
+        "title": "Senior Software Engineer (Backend): Onboarding",
+        "url": "https://job-boards.eu.greenhouse.io/bvnk/jobs/5025994101",
+        "score": 92,
+        "band": "strong",
+        "reasons": [
+          {
+            "name": "Role",
+            "detail": "Matches your target Backend Engineer"
+          },
+          {
+            "name": "Skills",
+            "detail": "Names Docker, AWS, Kubernetes"
+          },
+          {
+            "name": "Level",
+            "detail": "Senior level, a step from your 2 years"
+          },
+          {
+            "name": "Posted",
+            "detail": "14 days ago"
+          },
+          {
+            "name": "Location",
+            "detail": "Europe (location not checked)"
+          }
+        ]
+      },
+      "other_roles": []
+    },
+    {
+      "name": "Halcyon",
+      "job_board": "greenhouse: halcyon",
+      "score": 79,
+      "band": "strong",
+      "website": null,
+      "about": null,
+      "best_role": {
+        "title": "Senior Backend Cloud Engineer",
+        "url": "https://job-boards.greenhouse.io/halcyon/jobs/6252121004",
+        "score": 92,
+        "band": "strong",
+        "reasons": [
+          {
+            "name": "Role",
+            "detail": "Matches your target Backend Engineer"
+          },
+          {
+            "name": "Skills",
+            "detail": "Names Python, AWS, Kubernetes"
+          },
+          {
+            "name": "Level",
+            "detail": "Senior level, a step from your 2 years"
+          },
+          {
+            "name": "Posted",
+            "detail": "12 days ago"
+          },
+          {
+            "name": "Location",
+            "detail": "Remote, US (location not checked)"
+          }
+        ]
+      },
+      "other_roles": []
+    },
+    {
+      "name": "Schuberg Philis",
+      "job_board": "greenhouse: schubergphilis",
+      "score": 77,
+      "band": "strong",
+      "website": null,
+      "about": null,
+      "best_role": {
+        "title": "Windows DevOps Automation Engineer",
+        "url": "https://schubergphilis.com/careers/7809600003?greenhouse=1&gh_jid=7809600003",
+        "score": 85,
+        "band": "strong",
+        "reasons": [
+          {
+            "name": "Role",
+            "detail": "Matches your target DevOps Engineer"
+          },
+          {
+            "name": "Skills",
+            "detail": "Names Python, Docker, Kubernetes"
+          },
+          {
+            "name": "Level",
+            "detail": "Mid level, fits your 2 years"
+          },
+          {
+            "name": "Posted",
+            "detail": "98 days ago"
+          },
+          {
+            "name": "Location",
+            "detail": "Schiphol-Rijk, North Holland, Netherlands, with relocation support"
+          }
+        ]
+      },
+      "other_roles": [
+        {
+          "title": "Senior Kubernetes Engineer",
+          "url": "https://schubergphilis.com/careers/4787245003?greenhouse=1&gh_jid=4787245003",
+          "score": 62,
+          "band": "good",
+          "reasons": [
+            {
+              "name": "Role",
+              "detail": "Close to your target Backend Engineer"
+            },
+            {
+              "name": "Skills",
+              "detail": "Names Docker, AWS, Kubernetes"
+            },
+            {
+              "name": "Level",
+              "detail": "Senior level, a step from your 2 years"
+            },
+            {
+              "name": "Posted",
+              "detail": "1835 days ago"
+            },
+            {
+              "name": "Location",
+              "detail": "Schiphol-Rijk, North Holland, Netherlands (location not checked)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Alpaca",
+      "job_board": "greenhouse: alpaca",
+      "score": 74,
+      "band": "good",
+      "website": null,
+      "about": null,
+      "best_role": {
+        "title": "Senior DevOps Engineer",
+        "url": "https://job-boards.greenhouse.io/alpaca/jobs/6186916004",
+        "score": 85,
+        "band": "strong",
+        "reasons": [
+          {
+            "name": "Role",
+            "detail": "Matches your target DevOps Engineer"
+          },
+          {
+            "name": "Skills",
+            "detail": "Names Docker, Kubernetes"
+          },
+          {
+            "name": "Level",
+            "detail": "Senior level, a step from your 2 years"
+          },
+          {
+            "name": "Posted",
+            "detail": "30 days ago"
+          },
+          {
+            "name": "Location",
+            "detail": "Remote, open to Pakistan (Remote - Japan - APAC)"
+          }
+        ]
+      },
+      "other_roles": []
+    },
+    {
+      "name": "Arize AI",
+      "job_board": "greenhouse: arizeai",
+      "score": 74,
+      "band": "good",
+      "website": null,
+      "about": null,
+      "best_role": {
+        "title": "DevOps Engineer",
+        "url": "https://job-boards.greenhouse.io/arizeai/jobs/6203635004",
+        "score": 86,
+        "band": "strong",
+        "reasons": [
+          {
+            "name": "Role",
+            "detail": "Matches your target DevOps Engineer"
+          },
+          {
+            "name": "Skills",
+            "detail": "Names AWS, Kubernetes"
+          },
+          {
+            "name": "Level",
+            "detail": "Mid level, fits your 2 years"
+          },
+          {
+            "name": "Posted",
+            "detail": "59 days ago"
+          },
+          {
+            "name": "Location",
+            "detail": "Remote (United States) (location not checked)"
+          }
+        ]
+      },
+      "other_roles": []
+    },
+    {
+      "name": "WOO X",
+      "job_board": "greenhouse: woo",
+      "score": 70,
+      "band": "good",
+      "website": null,
+      "about": null,
+      "best_role": {
+        "title": "Senior DevOps Engineer",
+        "url": "https://job-boards.greenhouse.io/woo/jobs/5450510008",
+        "score": 81,
+        "band": "strong",
+        "reasons": [
+          {
+            "name": "Role",
+            "detail": "Matches your target DevOps Engineer"
+          },
+          {
+            "name": "Skills",
+            "detail": "Names AWS, Kubernetes"
+          },
+          {
+            "name": "Level",
+            "detail": "Senior level, a step from your 2 years"
+          },
+          {
+            "name": "Posted",
+            "detail": "37 days ago"
+          },
+          {
+            "name": "Location",
+            "detail": "Taipei, Taiwan (location not checked)"
+          }
+        ]
+      },
+      "other_roles": []
+    },
+    {
+      "name": "RapidFort, Inc.",
+      "job_board": "greenhouse: rapidfortinc",
+      "score": 69,
+      "band": "good",
+      "website": null,
+      "about": null,
+      "best_role": {
+        "title": "Senior Backend Engineer ((Python / Go)",
+        "url": "https://job-boards.greenhouse.io/rapidfortinc/jobs/4272902009",
+        "score": 80,
+        "band": "strong",
+        "reasons": [
+          {
+            "name": "Role",
+            "detail": "Matches your target Backend Engineer"
+          },
+          {
+            "name": "Skills",
+            "detail": "Names Python, Docker, AWS, Kubernetes"
+          },
+          {
+            "name": "Level",
+            "detail": "Senior level, a step from your 2 years"
+          },
+          {
+            "name": "Posted",
+            "detail": "169 days ago"
+          },
+          {
+            "name": "Location",
+            "detail": "Remote (location not checked)"
+          }
+        ]
+      },
+      "other_roles": []
+    },
+    {
+      "name": "AXS",
+      "job_board": "greenhouse: axs",
+      "score": 68,
+      "band": "good",
+      "website": null,
+      "about": null,
+      "best_role": {
+        "title": "Lead Software Engineer - Fullstack",
+        "url": "https://job-boards.greenhouse.io/axs/jobs/8940582002",
+        "score": 78,
+        "band": "strong",
+        "reasons": [
+          {
+            "name": "Role",
+            "detail": "Close to your target Backend Engineer"
+          },
+          {
+            "name": "Skills",
+            "detail": "Names Docker, AWS, Kubernetes"
+          },
+          {
+            "name": "Level",
+            "detail": "Senior level, a step from your 2 years"
+          },
+          {
+            "name": "Posted",
+            "detail": "6 days ago"
+          },
+          {
+            "name": "Location",
+            "detail": "Los Angeles, CA (location not checked)"
+          }
+        ]
+      },
+      "other_roles": []
+    }
+  ],
+  "left_out": {
+    "not the role searched for": 11,
+    "posting already closed": 3,
+    "a different kind of role": 2,
+    "not a Greenhouse, Lever or Ashby link": 1
+  },
+  "relaxed": true,
+  "olostep": {
+    "calls": 0,
+    "credits": 0,
+    "answered_from_cache": 10
+  }
+}

@@ -1,0 +1,104 @@
+Searched 4 queries.
+40 results -> 25 job boards read -> 10 companies that fit you (relaxed: location and level not checked)
+
+ 1. YipitData   83 (strong)   [greenhouse: yipitdata]
+    yipitdata.com  YipitData tracks trillions in live consumer and business spend, so you can monitor performance, spot shifts early, and act with confidence.
+    Backend Engineer   97
+      Role     Matches your target Backend Engineer
+      Skills   Names Python, Docker, AWS, Kubernetes
+      Level    Mid level, fits your 2 years
+      Posted   23 days ago
+      Location India Remote (location not checked)
+      https://job-boards.greenhouse.io/yipitdata/jobs/8280705
+
+ 2. Binance   79 (strong)   [greenhouse: binance]
+    binance.com
+    DevOps Engineer, Blockchain Infra (Fully Remote)   92
+      Role     Matches your target DevOps Engineer
+      Skills   Names Python, Docker, AWS, Kubernetes
+      Level    Mid level, fits your 2 years
+      Posted   36 days ago
+      Location Australia; Europe; Hong Kong; Malaysia; Singapore; Taiwan; United Arab Emirates; United Kingdom (location not checked)
+      https://job-boards.eu.greenhouse.io/binance/jobs/5002663101
+
+ 3. BVNK   79 (strong)   [greenhouse: bvnk]
+    bvnk.com  Pay out to local bank accounts from stablecoin balances on BVNK Connect your balances to bank accounts via Mastercard Move, across 11 launch currencies, expanding to 40+ in 2027.
+    Senior Software Engineer (Backend): Onboarding   92
+      Role     Matches your target Backend Engineer
+      Skills   Names Docker, AWS, Kubernetes
+      Level    Senior level, a step from your 2 years
+      Posted   14 days ago
+      Location Europe (location not checked)
+      https://job-boards.eu.greenhouse.io/bvnk/jobs/5025994101
+
+ 4. Halcyon   79 (strong)   [greenhouse: halcyon]
+    Senior Backend Cloud Engineer   92
+      Role     Matches your target Backend Engineer
+      Skills   Names Python, AWS, Kubernetes
+      Level    Senior level, a step from your 2 years
+      Posted   12 days ago
+      Location Remote, US (location not checked)
+      https://job-boards.greenhouse.io/halcyon/jobs/6252121004
+
+ 5. Schuberg Philis   77 (strong)   [greenhouse: schubergphilis]
+    Windows DevOps Automation Engineer   85
+      Role     Matches your target DevOps Engineer
+      Skills   Names Python, Docker, Kubernetes
+      Level    Mid level, fits your 2 years
+      Posted   98 days ago
+      Location Schiphol-Rijk, North Holland, Netherlands, with relocation support
+      https://schubergphilis.com/careers/7809600003?greenhouse=1&gh_jid=7809600003
+    + 1 more role that fit: Senior Kubernetes Engineer
+
+ 6. Alpaca   74 (good)   [greenhouse: alpaca]
+    Senior DevOps Engineer   85
+      Role     Matches your target DevOps Engineer
+      Skills   Names Docker, Kubernetes
+      Level    Senior level, a step from your 2 years
+      Posted   30 days ago
+      Location Remote, open to Pakistan (Remote - Japan - APAC)
+      https://job-boards.greenhouse.io/alpaca/jobs/6186916004
+
+ 7. Arize AI   74 (good)   [greenhouse: arizeai]
+    DevOps Engineer   86
+      Role     Matches your target DevOps Engineer
+      Skills   Names AWS, Kubernetes
+      Level    Mid level, fits your 2 years
+      Posted   59 days ago
+      Location Remote (United States) (location not checked)
+      https://job-boards.greenhouse.io/arizeai/jobs/6203635004
+
+ 8. WOO X   70 (good)   [greenhouse: woo]
+    Senior DevOps Engineer   81
+      Role     Matches your target DevOps Engineer
+      Skills   Names AWS, Kubernetes
+      Level    Senior level, a step from your 2 years
+      Posted   37 days ago
+      Location Taipei, Taiwan (location not checked)
+      https://job-boards.greenhouse.io/woo/jobs/5450510008
+
+ 9. RapidFort, Inc.   69 (good)   [greenhouse: rapidfortinc]
+    Senior Backend Engineer ((Python / Go)   80
+      Role     Matches your target Backend Engineer
+      Skills   Names Python, Docker, AWS, Kubernetes
+      Level    Senior level, a step from your 2 years
+      Posted   169 days ago
+      Location Remote (location not checked)
+      https://job-boards.greenhouse.io/rapidfortinc/jobs/4272902009
+
+10. AXS   68 (good)   [greenhouse: axs]
+    Lead Software Engineer - Fullstack   78
+      Role     Close to your target Backend Engineer
+      Skills   Names Docker, AWS, Kubernetes
+      Level    Senior level, a step from your 2 years
+      Posted   6 days ago
+      Location Los Angeles, CA (location not checked)
+      https://job-boards.greenhouse.io/axs/jobs/8940582002
+
+Left out:
+   11  not the role searched for
+    3  posting already closed
+    2  a different kind of role
+    1  not a Greenhouse, Lever or Ashby link
+
+Olostep: 0 calls, 0 credits, 10 answered from cache.

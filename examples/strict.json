@@ -1,0 +1,64 @@
+{
+  "searches": [
+    "\"Backend Engineer\" Python remote (worldwide OR anywhere OR global OR Pakistan) (site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.ashbyhq.com)",
+    "\"DevOps Engineer\" Docker (\"visa sponsorship\" OR relocation) (Europe OR Canada) (site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.ashbyhq.com)",
+    "\"Backend Engineer\" AWS (\"visa sponsorship\" OR relocation) (Europe OR Canada) (site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.ashbyhq.com)",
+    "\"DevOps Engineer\" Kubernetes remote (worldwide OR anywhere OR global OR Pakistan) (site:boards.greenhouse.io OR site:job-boards.greenhouse.io OR site:jobs.lever.co OR site:jobs.ashbyhq.com)"
+  ],
+  "failed_searches": [],
+  "results_seen": 40,
+  "boards_read": 25,
+  "companies": [
+    {
+      "name": "Schuberg Philis",
+      "job_board": "greenhouse: schubergphilis",
+      "score": 74,
+      "band": "good",
+      "website": "schubergphilis.com",
+      "about": "Mission-critical IT has always been at the heart of our work. With 100% uptime, a 99%+ project success rate (35% industry average), and #1 customer satisfaction, we\u2019ve learned that true progress isn\u2019t just about flawless technology.",
+      "best_role": {
+        "title": "Windows DevOps Automation Engineer",
+        "url": "https://schubergphilis.com/careers/7809600003?greenhouse=1&gh_jid=7809600003",
+        "score": 85,
+        "band": "strong",
+        "reasons": [
+          {
+            "name": "Role",
+            "detail": "Matches your target DevOps Engineer"
+          },
+          {
+            "name": "Skills",
+            "detail": "Names Python, Docker, Kubernetes"
+          },
+          {
+            "name": "Level",
+            "detail": "Mid level, fits your 2 years"
+          },
+          {
+            "name": "Posted",
+            "detail": "98 days ago"
+          },
+          {
+            "name": "Location",
+            "detail": "Schiphol-Rijk, North Holland, Netherlands, with relocation support"
+          }
+        ]
+      },
+      "other_roles": []
+    }
+  ],
+  "left_out": {
+    "not open where you can work": 19,
+    "not the role searched for": 11,
+    "posting already closed": 3,
+    "not a Greenhouse, Lever or Ashby link": 1,
+    "job board could not be read": 1,
+    "wrong level for your experience": 1
+  },
+  "relaxed": false,
+  "olostep": {
+    "calls": 0,
+    "credits": 0,
+    "answered_from_cache": 5
+  }
+}
