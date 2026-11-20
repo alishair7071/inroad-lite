@@ -42,7 +42,7 @@ flowchart LR
     subgraph lite["inroad-lite"]
         web["<b>web</b><br/>where you start it<br/>and see the results"]
         api["<b>api</b><br/>matches jobs to you<br/>and ranks them"]
-        sourcing["<b>sourcing</b><br/>finds companies<br/>on the internet"]
+        sourcing["<b>sourcing</b><br/>finds and researches<br/>companies on the internet"]
     end
     olostep["<b>Olostep</b><br/>web search and<br/>website reading"]
     boards["<b>Company job boards</b><br/>Greenhouse, Lever, Ashby"]
@@ -55,8 +55,8 @@ flowchart LR
 - **web** is the front door. In the full Inroad it is the website; here it is
   a command you type.
 - **api** knows about you. It decides which jobs suit you and ranks them.
-- **sourcing** knows about the outside world. It finds companies and checks
-  their jobs. It never sees your full profile, only the roles, skills and
+- **sourcing** knows about the outside world. It finds companies, researches
+  them and checks their jobs. It never sees your full profile, only the roles, skills and
   place it needs to search.
 
 ### What happens when you run a search
@@ -114,6 +114,16 @@ uv run inroad-lite research yipitdata.com --profile profile.yaml
 ```
 
 It follows the same steps as Inroad's company research:
+
+```mermaid
+flowchart TB
+    a["1. Read the homepage<br/>and pick the pages worth reading<br/>(Olostep scrape)"]
+    b["2. Read those pages<br/>about, careers, product...<br/>(Olostep scrape)"]
+    c["3. Note what the site says<br/>each fact with its source page"]
+    d["4. Find its job board<br/>and list the open roles"]
+    e["5. Show the roles that fit you<br/>(with --profile)"]
+    a --> b --> c --> d --> e
+```
 
 1. **Reads the homepage** with Olostep and picks the pages worth reading:
    about, careers, product, team, customers, news.
