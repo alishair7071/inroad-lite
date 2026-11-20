@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>inroad-lite</title>
+<meta name="description" content="Find companies hiring for your roles, and research one company from its website.">
+<style>
+  :root {
+    --bg: #f7f7f5; --card: #ffffff; --ink: #1d1d1b; --muted: #6b6b66; --line: #e3e2dd;
+    --accent: #2f5d50; --accent-ink: #ffffff; --soft: #eef3f1; --bad: #a33a2a;
+    --strong: #2f6b3a; --good: #3d6491; --fair: #8a6d1f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #151614; --card: #1e201d; --ink: #ecebe6; --muted: #a2a19a; --line: #34362f;
+      --accent: #7fb8a4; --accent-ink: #10201b; --soft: #24302b; --bad: #ef8f7f;
+      --strong: #8fd09a; --good: #9cbbe6; --fair: #e0c470;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #151614; --card: #1e201d; --ink: #ecebe6; --muted: #a2a19a; --line: #34362f;
+    --accent: #7fb8a4; --accent-ink: #10201b; --soft: #24302b; --bad: #ef8f7f;
+    --strong: #8fd09a; --good: #9cbbe6; --fair: #e0c470;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  h2 { font-size: 18px; margin: 0 0 12px; }
+  h3 { font-size: 16px; margin: 0; }
+  p { margin: 0 0 8px; }
+  a { color: var(--accent); overflow-wrap: anywhere; }
+  .lede { color: var(--muted); margin-bottom: 20px; }
+  .note { font-size: 13px; color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+  .tab { flex: 1; padding: 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+         border-radius: 8px; font: inherit; cursor: pointer; }
+  .tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  label { display: block; font-weight: 600; font-size: 13px; margin: 12px 0 4px; }
+  label .note { font-weight: 400; }
+  input[type=text], input[type=password], input[type=number], textarea {
+    width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: 7px;
+    background: var(--bg); color: var(--ink); font: inherit; }
+  textarea { resize: vertical; min-height: 40px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+  .checks { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+  .checks label { display: inline-flex; align-items: center; gap: 6px; font-weight: 400; margin: 0; font-size: 14px; }
+  .spaced { margin-top: 14px; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
+  button.go { padding: 10px 18px; border: 0; border-radius: 8px; background: var(--accent); color: var(--accent-ink);
+              font: inherit; font-weight: 600; cursor: pointer; }
+  button.go:disabled { opacity: 0.6; cursor: progress; }
+  .status { padding: 12px 14px; border-radius: 8px; background: var(--soft); margin-bottom: 16px; }
+  .status.error { color: var(--bad); }
+  .hidden { display: none; }
+  .company-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .score { font-weight: 700; font-size: 20px; white-space: nowrap; }
+  .band { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 99px; border: 1px solid currentColor; margin-left: 6px; }
+  .band-strong { color: var(--strong); } .band-good { color: var(--good); } .band-fair, .band-weak { color: var(--fair); }
+  .meta { color: var(--muted); font-size: 13px; margin: 2px 0 8px; }
+  .role { border-top: 1px solid var(--line); padding-top: 10px; margin-top: 10px; }
+  .role-head { display: flex; justify-content: space-between; gap: 12px; font-weight: 600; }
+  dl.reasons { display: grid; grid-template-columns: max-content 1fr; gap: 2px 12px; margin: 6px 0; font-size: 14px; }
+  dl.reasons dt { color: var(--muted); }
+  dl.reasons dd { margin: 0; }
+  ul.plain { margin: 6px 0; padding-left: 18px; }
+  .fact { margin-top: 10px; }
+  .fact blockquote { margin: 2px 0; padding-left: 10px; border-left: 3px solid var(--line); color: var(--muted); font-size: 14px; }
+  .theme { float: right; font-size: 13px; background: none; border: 1px solid var(--line); color: var(--muted);
+           border-radius: 6px; padding: 4px 8px; cursor: pointer; }
+</style>
+</head>
+<body>
+<main>
+  <button class="theme" id="theme" type="button">Theme</button>
+  <h1>inroad-lite</h1>
+  <p class="lede">Tell it the jobs you want. It finds companies hiring for them right now, checks every
+    opening is real, and ranks them by how well they fit you, with the reason for each one.
+    A small open-source version of <a href="https://inroad-web.vercel.app/">Inroad</a>, using
+    <a href="https://olostep.com">Olostep</a> to search the web and read company websites.</p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-search" aria-selected="true" type="button">Find companies</button>
+    <button class="tab" role="tab" id="tab-research" aria-selected="false" type="button">Research one company</button>
+  </div>
+
+  <form id="form" class="card" novalidate>
+    <div id="research-fields" class="hidden">
+      <label for="website">Company website <span class="note">for example gitlab.com</span></label>
+      <input type="text" id="website" autocomplete="off" placeholder="yipitdata.com">
+      <div class="checks spaced">
+        <label><input type="checkbox" id="use-profile" checked> Also show which of its roles fit me</label>
+      </div>
+    </div>
+
+    <div id="profile-fields">
+      <h2 class="spaced">About you</h2>
+      <label for="roles">Roles you want <span class="note">up to 4, one per line or comma separated</span></label>
+      <textarea id="roles" rows="2">Backend Engineer
+DevOps Engineer</textarea>
+      <label for="skills">Your skills <span class="note">comma separated</span></label>
+      <input type="text" id="skills" value="Python, Docker, AWS, Kubernetes">
+      <div class="grid">
+        <div>
+          <label for="location">Where you live <span class="note">City, Country</span></label>
+          <input type="text" id="location" value="Lahore, Pakistan">
+        </div>
+        <div>
+          <label for="years">Years of experience</label>
+          <input type="number" id="years" min="0" max="70" step="0.5" value="2">
+        </div>
+      </div>
+      <label>How you want to work</label>
+      <div class="checks" id="prefs">
+        <label><input type="checkbox" value="remote" checked> Remote</label>
+        <label><input type="checkbox" value="onsite"> Onsite</label>
+        <label><input type="checkbox" value="hybrid"> Hybrid</label>
+        <label><input type="checkbox" value="relocation" checked> Relocate</label>
+      </div>
+      <label for="places">Places you would move to <span class="note">for relocation, up to 4, comma separated</span></label>
+      <input type="text" id="places" value="Europe, Canada">
+      <div class="checks spaced">
+        <label><input type="checkbox" id="relaxed"> Relaxed: check the role only, not location or level</label>
+      </div>
+    </div>
+
+    <label for="code">Access code <span class="note">each run spends Olostep credits, so the site needs a code</span></label>
+    <input type="password" id="code" autocomplete="off">
+
+    <div class="row">
+      <button class="go" id="go" type="submit">Find companies</button>
+      <span class="note" id="cost"></span>
+    </div>
+  </form>
+
+  <div id="status" class="status hidden" role="status" aria-live="polite"></div>
+  <div id="results"></div>
+
+  <p class="note">Open source: <a href="https://github.com/alishair7071/inroad-lite">github.com/alishair7071/inroad-lite</a>.
+    This is not Inroad's private code: Inroad's private code, data and keys are not included.</p>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var mode = "search";
+  var store = {
+    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+
+  var theme = store.get("theme");
+  if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+  $("theme").addEventListener("click", function () {
+    var current = document.documentElement.dataset.theme;
+    var dark = current ? current === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.dataset.theme = dark ? "light" : "dark";
+    store.set("theme", document.documentElement.dataset.theme);
+  });
+
+  // The form is remembered on this browser only.
+  var FIELDS = ["roles", "skills", "location", "years", "places", "website"];
+  try {
+    var saved = JSON.parse(store.get("form") || "null");
+    if (saved) {
+      FIELDS.forEach(function (k) { if (typeof saved[k] === "string") $(k).value = saved[k]; });
+      if (Array.isArray(saved.prefs)) {
+        document.querySelectorAll("#prefs input").forEach(function (box) {
+          box.checked = saved.prefs.indexOf(box.value) >= 0;
+        });
+      }
+    }
+  } catch (e) {}
+  $("code").value = store.get("code") || "";
+
+  function setMode(next) {
+    mode = next;
+    $("tab-search").setAttribute("aria-selected", String(next === "search"));
+    $("tab-research").setAttribute("aria-selected", String(next === "research"));
+    $("research-fields").classList.toggle("hidden", next !== "research");
+    syncProfile();
+    $("go").textContent = next === "search" ? "Find companies" : "Research company";
+    $("cost").textContent = next === "search"
+      ? "Takes up to a minute. About 20 to 40 Olostep credits."
+      : "Takes about half a minute. About 5 Olostep credits.";
+  }
+  function syncProfile() {
+    $("profile-fields").classList.toggle("hidden", mode === "research" && !$("use-profile").checked);
+  }
+  $("tab-search").addEventListener("click", function () { setMode("search"); });
+  $("tab-research").addEventListener("click", function () { setMode("research"); });
+  $("use-profile").addEventListener("change", syncProfile);
+
+  function list(text) {
+    return text.split(/[\n,]/).map(function (s) { return s.trim(); }).filter(Boolean);
+  }
+  function readProfile() {
+    var prefs = [];
+    document.querySelectorAll("#prefs input:checked").forEach(function (b) { prefs.push(b.value); });
+    var remember = { prefs: prefs };
+    FIELDS.forEach(function (k) { remember[k] = $(k).value; });
+    store.set("form", JSON.stringify(remember));
+    var years = $("years").value.trim();
+    var out = {
+      roles: list($("roles").value).slice(0, 4),
+      skills: list($("skills").value),
+      location: $("location").value.trim() || null,
+      work_preference: prefs.length ? prefs : ["remote"],
+      relocation_places: list($("places").value).slice(0, 4)
+    };
+    if (years !== "") out.years_experience = Number(years);
+    return out;
+  }
+
+  // DOM helpers. Text only: nothing from a result is ever read as HTML.
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) {
+      if (k === "text") node.textContent = attrs[k];
+      else node.setAttribute(k, attrs[k]);
+    });
+    (children || []).forEach(function (c) {
+      if (c) node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+    });
+    return node;
+  }
+  function link(url, text) {
+    if (!/^https?:\/\//i.test(url || "")) return el("span", { text: text || url || "" });
+    return el("a", { href: url, target: "_blank", rel: "noopener noreferrer", text: text || url });
+  }
+  function band(name) { return el("span", { "class": "band band-" + name, text: name }); }
+  function role(r) {
+    var reasons = el("dl", { "class": "reasons" });
+    r.reasons.forEach(function (part) {
+      reasons.appendChild(el("dt", { text: part.name }));
+      reasons.appendChild(el("dd", { text: part.detail }));
+    });
+    return el("div", { "class": "role" }, [
+      el("div", { "class": "role-head" }, [link(r.url, r.title), el("span", { text: String(r.score) })]),
+      reasons
+    ]);
+  }
+  function leftOut(counts, title) {
+    var keys = Object.keys(counts || {});
+    if (!keys.length) return null;
+    var ul = el("ul", { "class": "plain" });
+    keys.forEach(function (k) { ul.appendChild(el("li", { text: counts[k] + "  " + k })); });
+    return el("div", { "class": "card" }, [el("h3", { text: title }), ul]);
+  }
+  function spend(o) {
+    return el("p", { "class": "note", text: "Olostep: " + o.calls + " calls, " + o.credits +
+      " credits, " + o.answered_from_cache + " answered from cache." });
+  }
+
+  function showSearch(rep) {
+    var box = $("results");
+    var shown = rep.companies.length;
+    box.appendChild(el("p", { "class": "note", text:
+      rep.results_seen + " results, " + rep.boards_read + " job boards read, " +
+      rep.companies_fitting + (rep.companies_fitting === 1 ? " company fits you" : " companies fit you") +
+      (shown < rep.companies_fitting ? ", best " + shown + " shown" : "") +
+      (rep.relaxed ? " (relaxed: location and level not checked)" : "") + "." }));
+    if (!shown) {
+      box.appendChild(el("div", { "class": "card" }, [el("p", {
+        text: "No company fits with these settings. Try the relaxed option, or other roles." })]));
+    }
+    rep.companies.forEach(function (c, i) {
+      var card = el("div", { "class": "card" }, [
+        el("div", { "class": "company-head" }, [
+          el("h3", { text: (i + 1) + ". " + c.name }),
+          el("span", { "class": "score" }, [String(c.score), band(c.band)])
+        ]),
+        el("p", { "class": "meta" }, [
+          c.website ? link("https://" + c.website, c.website) : null,
+          (c.website ? "  ·  " : "") + c.job_board
+        ]),
+        c.about ? el("p", { text: c.about }) : null,
+        role(c.best_role)
+      ]);
+      if (c.other_roles.length) {
+        card.appendChild(el("p", { "class": "note spaced", text: "+ " + c.other_roles.length +
+          " more that fit: " + c.other_roles.map(function (r) { return r.title; }).join(", ") }));
+      }
+      box.appendChild(card);
+    });
+    var lo = leftOut(rep.left_out, "Left out, and why");
+    if (lo) box.appendChild(lo);
+    if (rep.failed_searches.length) {
+      box.appendChild(el("p", { "class": "note",
+        text: rep.failed_searches.length + " searches did not answer in time." }));
+    }
+    box.appendChild(spend(rep.olostep));
+  }
+
+  function showResearch(rep) {
+    var box = $("results");
+    box.appendChild(el("div", { "class": "card" }, [
+      el("h2", { text: rep.name }),
+      el("p", { "class": "meta" }, [link("https://" + rep.domain, rep.domain)]),
+      rep.summary ? el("p", { text: rep.summary }) : null
+    ]));
+    var facts = rep.facts.filter(function (f) { return f.category !== "Overview"; });
+    if (facts.length) {
+      var fc = el("div", { "class": "card" }, [el("h3", { text: "What the website says" })]);
+      facts.forEach(function (f) {
+        fc.appendChild(el("div", { "class": "fact" }, [
+          el("p", {}, [el("strong", { text: f.category + ": " }), f.text]),
+          f.quote !== f.text ? el("blockquote", { text: "“" + f.quote + "”" }) : null,
+          el("p", { "class": "note" }, ["source: ", link(f.source)])
+        ]));
+      });
+      box.appendChild(fc);
+    }
+    var roles = el("div", { "class": "card" });
+    if (rep.job_board) {
+      roles.appendChild(el("h3", { text: "Open roles: " + rep.open_roles_total + " on " + rep.job_board }));
+      if (rep.board_note) roles.appendChild(el("p", { "class": "note", text: "(board " + rep.board_note + ")" }));
+      var ul = el("ul", { "class": "plain" });
+      rep.open_roles.forEach(function (r) {
+        ul.appendChild(el("li", {}, [link(r.url, r.title),
+          "  (" + (r.locations.join(", ") || "location not stated") + ")"]));
+      });
+      roles.appendChild(ul);
+      var hidden = rep.open_roles_total - rep.open_roles.length;
+      if (hidden > 0) roles.appendChild(el("p", { "class": "note", text: "... and " + hidden + " more" }));
+    } else {
+      roles.appendChild(el("h3", { text: "Open roles: none listed" }));
+      if (rep.board_note) roles.appendChild(el("p", { "class": "note", text: rep.board_note }));
+    }
+    box.appendChild(roles);
+    if (rep.roles_that_fit) {
+      var fit = el("div", { "class": "card" }, [el("h3", { text: "Roles that fit you: " + rep.roles_that_fit.length })]);
+      rep.roles_that_fit.forEach(function (r) { fit.appendChild(role(r)); });
+      box.appendChild(fit);
+      var lo = leftOut(rep.left_out, "Roles left out, and why");
+      if (lo) box.appendChild(lo);
+    }
+    var pages = el("ul", { "class": "plain" });
+    rep.pages_read.forEach(function (u) { pages.appendChild(el("li", {}, [link(u)])); });
+    box.appendChild(el("div", { "class": "card" }, [
+      el("h3", { text: "Pages read (" + rep.pages_read.length + ")" }), pages]));
+    box.appendChild(spend(rep.olostep));
+  }
+
+  function status(text, isError) {
+    var s = $("status");
+    s.textContent = text;
+    s.classList.toggle("error", !!isError);
+    s.classList.toggle("hidden", !text);
+  }
+
+  $("form").addEventListener("submit", function (event) {
+    event.preventDefault();
+    var accessCode = $("code").value.trim();
+    if (!accessCode) { status("Enter the access code first.", true); return; }
+    store.set("code", accessCode);
+    var body, path;
+    if (mode === "search") {
+      path = "/api/search";
+      body = { profile: readProfile(), relaxed: $("relaxed").checked };
+      if (!body.profile.roles.length) { status("Add at least one role.", true); return; }
+    } else {
+      path = "/api/research";
+      var site = $("website").value.trim();
+      if (!site) { status("Enter the company's website, for example gitlab.com.", true); return; }
+      var withProfile = $("use-profile").checked;
+      body = { website: site, profile: withProfile ? readProfile() : null,
+               relaxed: withProfile && $("relaxed").checked };
+    }
+    $("results").textContent = "";
+    $("go").disabled = true;
+    var started = Date.now();
+    var which = mode;
+    var label = which === "search" ? "Searching job boards" : "Reading the website";
+    var seconds = function () { return Math.round((Date.now() - started) / 1000) + "s"; };
+    status(label + "...");
+    var timer = setInterval(function () { status(label + "... " + seconds()); }, 1000);
+    fetch(path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Access-Code": accessCode },
+      body: JSON.stringify(body)
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (!res.ok) throw new Error(data.message || ("The server answered " + res.status + "."));
+        return data;
+      });
+    }).then(function (data) {
+      status("Done in " + seconds() + ".");
+      if (which === "search") showSearch(data); else showResearch(data);
+    }).catch(function (err) {
+      status(err.message || "Something went wrong.", true);
+    }).finally(function () {
+      clearInterval(timer);
+      $("go").disabled = false;
+    });
+  });
+
+  setMode("search");
+})();
+</script>
+</body>
+</html>

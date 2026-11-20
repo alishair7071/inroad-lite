@@ -19,7 +19,8 @@ keeps only the core: finding companies and matching them to a person.
   service), each in its own repository, with databases and background jobs.
 - inroad-lite is **one repository**. Each of those apps becomes a **folder**
   with the same name and the same job, so the design is the same, just
-  smaller. It runs from the command line, with no database.
+  smaller. It runs from the command line or a simple web page, with no
+  database.
 
 > **This is not Inroad's private code.** inroad-lite is a separate, simplified
 > project written to be shared openly, and published. A few small pieces, such as the matching rules and the country
@@ -58,7 +59,7 @@ flowchart LR
 ```
 
 - **web** is the front door. In the full Inroad it is the website; here it is
-  a command you type.
+  a command you type, or a simple web page.
 - **api** knows about you. It decides which jobs suit you and ranks them.
 - **sourcing** knows about the outside world. It finds companies, researches
   them and checks their jobs. It never sees your full profile, only the roles, skills and
@@ -215,6 +216,36 @@ Add `--relaxed` to skip the location and level checks.
 For engineers: a detailed technical write-up is in
 [docs/architecture.md](docs/architecture.md), and `uv run pytest` runs the
 tests without a key.
+
+## Use it in the browser
+
+inroad-lite also has a simple web page with the same two features: find
+companies, and research one company. Start it on your computer:
+
+```bash
+uv run uvicorn main:app --port 8000
+```
+
+Then open http://127.0.0.1:8000. Put `INROAD_LITE_ACCESS_CODE=` with a code
+of your choice in `.env` first: every run spends Olostep credits, so the page
+asks for that code and refuses to run without one. Runs are also limited per
+hour (`INROAD_LITE_RUNS_PER_HOUR`, default 10).
+
+The page is the **web** part, in
+[`web/server.py`](src/inroad_lite/web/server.py) and
+[`web/static/index.html`](src/inroad_lite/web/static/index.html). It calls the
+same api code as the command line, so results are the same.
+
+### Put it online with Vercel
+
+1. Import this GitHub repository in Vercel. It finds `main.py` and runs it as
+   a Python function; `vercel.json` lets a run take up to 5 minutes.
+2. In the project's **Settings > Environment Variables**, add
+   `OLOSTEP_API_KEY` and `INROAD_LITE_ACCESS_CODE`.
+3. Deploy, open the address Vercel gives, and enter the access code.
+
+On Vercel the 6-hour cache lasts only while a server instance is alive, so
+repeat runs may spend credits again.
 
 ## How to test it
 

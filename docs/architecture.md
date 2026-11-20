@@ -12,7 +12,7 @@ rules about who may call whom.
 
 | Part | Plays the role of | What it is | Owns |
 |---|---|---|---|
-| `web` | the website | The command line | Reading the profile file and printing results. Talks to `api`, nothing else |
+| `web` | the website | The command line, and a small web page (`server.py`, `static/index.html`) | Reading the profile and showing results. Talks to `api`, nothing else |
 | `api` | the backend | Routers, services, schemas | The person: their profile, whether a posting fits them (Stage B), the score and its reasons |
 | `sourcing` | the data service | Entry points, services, board readers, network layer | Everything that reads the outside world: Olostep search and scrape, public job boards. Holds no user data |
 | `core` | shared helpers | Settings, cache, country table | Shared helpers, no feature logic |
@@ -205,7 +205,7 @@ flowchart LR
 |---|---|
 | Separate services calling each other over the network | Packages calling each other through one client function each; `sourcing_client.py` is the one file to change to make sourcing a separate service |
 | Databases and background workers | None. Results are printed and optionally saved as JSON |
-| A web app | A command line |
+| A full web app with accounts | A command line and one web page behind an access code |
 | More job boards | Greenhouse, Lever, Ashby |
 | More ways to prove which website a company owns | The board's own data names the company; the website for the "about" line is checked against the name |
 | Stricter network safety checks | Fixed public job-board hosts only, no redirects |
@@ -223,6 +223,8 @@ flowchart LR
 | `--fresh` | off | Ask Olostep again instead of using the cache |
 | `--relaxed` | off | Check the role only, not location or level |
 | `--about N` | 3 | Describe the top N companies from their homepage; 0 to skip |
+| `INROAD_LITE_ACCESS_CODE` | none | Website only: the code a visitor must enter; without it the site refuses to run |
+| `INROAD_LITE_RUNS_PER_HOUR` | 10 | Website only: runs allowed per hour, per server instance |
 
 ## 10. Running and testing it
 
