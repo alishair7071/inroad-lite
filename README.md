@@ -21,6 +21,12 @@ keeps only the core: finding companies and matching them to a person.
   with the same name and the same job, so the design is the same, just
   smaller. It runs from the command line, with no database.
 
+> **This is not Inroad's private code.** inroad-lite is a separate, simplified
+> project written to be shared openly, and published with the Inroad team's
+> permission. A few small pieces, such as the matching rules and the country
+> list, are adapted from Inroad. Inroad's private code, data, users, keys,
+> servers and most of its logic are not included.
+
 ## How it works
 
 You describe yourself in a short file: the roles you want, your skills, where
