@@ -160,9 +160,8 @@ What the website says:
 Open roles: 40 on greenhouse: yipitdata
 ```
 
-Inroad reads company pages with an AI model. inroad-lite uses simple rules
-instead, so it finds fewer facts, but never one the site does not plainly
-say.
+inroad-lite finds these facts with simple rules, not an AI model, so it
+finds fewer, but never one the site does not plainly say.
 
 ## Where Olostep is used
 

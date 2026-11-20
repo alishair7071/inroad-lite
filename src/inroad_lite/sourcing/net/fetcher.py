@@ -1,7 +1,6 @@
 """The one way sourcing reads a job board: https only, to a host the board
-reader names, no redirects, a time limit and a size cap. A simplified
-version of inroad-sourcing's SafeFetcher (which also checks every resolved
-IP); here every host is a fixed public job-board API."""
+reader names, no redirects, a time limit and a size cap. Every host it may
+reach is a fixed public job-board API."""
 
 from __future__ import annotations
 

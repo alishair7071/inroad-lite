@@ -1,7 +1,6 @@
 """A search hit is a lead, not proof. A candidate is kept only once its own
 job board has been read and holds an open posting for the searched roles.
-Mirrors inroad-sourcing's app/services/candidate_proof.py (which also proves
-the company's domain; here the board's own data names the company)."""
+The board's own data names the company."""
 
 from __future__ import annotations
 

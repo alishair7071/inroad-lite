@@ -1,7 +1,6 @@
 """Find companies for a profile. Stage A in sourcing (search, then prove an
 open posting), Stage B here (does each posting fit this person, and how
-well), then the best few get an "about" from their homepage. Mirrors
-inroad-api's app/services/match_discovery.py."""
+well), then the best few get an "about" from their homepage."""
 
 from __future__ import annotations
 

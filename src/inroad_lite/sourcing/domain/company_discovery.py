@@ -1,5 +1,4 @@
-"""Company discovery's types. Pure: no network, no Pydantic. Mirrors
-inroad-sourcing's app/domain/company_discovery.py."""
+"""Company discovery's types. Pure: no network, no Pydantic."""
 
 from __future__ import annotations
 

@@ -1,5 +1,5 @@
 """Find companies hiring for your roles, using Olostep search and public job
-boards. The front door: plays inroad-web's part and talks only to api."""
+boards. The front door: plays the website's part and talks only to api."""
 
 from __future__ import annotations
 

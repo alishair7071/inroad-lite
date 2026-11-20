@@ -1,6 +1,6 @@
 """What every board reader provides. Readers build URLs and turn payloads
 into Jobs; they never fetch (only sourcing's net layer does, a test holds
-it). Mirrors inroad-sourcing's app/ats/base.py."""
+it)."""
 
 from __future__ import annotations
 

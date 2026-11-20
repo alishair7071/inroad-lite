@@ -1,7 +1,6 @@
 """What a posting says about visa sponsorship and relocation. Pure and
 deterministic: a phrase match with negation, never a guess. "Not stated" is
-the answer whenever the text does not say it plainly. Copied from
-inroad-sourcing's app/discovery/visa_statement.py."""
+the answer whenever the text does not say it plainly."""
 
 from __future__ import annotations
 

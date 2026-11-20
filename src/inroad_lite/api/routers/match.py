@@ -1,6 +1,5 @@
-"""The entry point web calls to find companies. In Inroad a router is HTTP
-only; here it is the same thin layer: take the input, call the service,
-turn failures into an ApiError."""
+"""The entry point web calls to find companies. A thin layer: take the
+input, call the service, turn failures into an ApiError."""
 
 from __future__ import annotations
 

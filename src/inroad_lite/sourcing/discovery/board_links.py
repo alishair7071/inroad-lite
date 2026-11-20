@@ -1,7 +1,6 @@
 """The company's job board, from links on its own home and careers pages.
-Pure. Mirrors inroad-sourcing's app/ats/references.py, for the three boards
-inroad-lite reads. Only those two pages are trusted: other pages link to
-partners' and customers' boards."""
+Pure. For the three boards inroad-lite reads. Only those two pages are
+trusted: other pages link to partners' and customers' boards."""
 
 from __future__ import annotations
 

@@ -1,7 +1,6 @@
 """Which of a site's own pages to read, from the links on its homepage. Pure.
-A small version of inroad-sourcing's website discovery: links are sorted
-into page kinds by their path and text, and the shortest link of each kind
-wins."""
+Links are sorted into page kinds by their path and text, and the shortest
+link of each kind wins."""
 
 from __future__ import annotations
 

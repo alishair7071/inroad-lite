@@ -1,6 +1,5 @@
-"""Company research's types. Pure. Mirrors the shape of inroad-sourcing's
-research run: the site's pages, what they say (with evidence), and the
-company's open roles."""
+"""Company research's types. Pure: the site's pages, what they say (with
+evidence), and the company's open roles."""
 
 from __future__ import annotations
 

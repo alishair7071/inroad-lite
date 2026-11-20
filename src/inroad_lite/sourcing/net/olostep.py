@@ -1,6 +1,5 @@
 """The one module that calls Olostep: search and scrape, with a time limit,
-one retry, a cache and a running count of the credits spent. Mirrors
-inroad-sourcing's app/net/olostep.py."""
+one retry, a cache and a running count of the credits spent."""
 
 from __future__ import annotations
 

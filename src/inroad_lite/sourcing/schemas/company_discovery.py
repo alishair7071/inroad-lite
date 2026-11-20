@@ -1,6 +1,6 @@
 """Sourcing's public contract for company discovery: the only sourcing types
-inroad-lite's api sees. In Inroad this is the JSON of
-POST /v1/company-discovery; here it is a function call with the same shape."""
+inroad-lite's api sees. Plain data in and out, so it could travel as JSON
+if sourcing ran as a separate service."""
 
 from __future__ import annotations
 

@@ -1,6 +1,5 @@
-"""Sourcing's entry point for company discovery. HTTP only in Inroad
-(POST /v1/company-discovery); here the same job as a function: take the
-contract in, call the service, give the contract back."""
+"""Sourcing's entry point for company discovery: take the contract in, call
+the service, give the contract back."""
 
 from __future__ import annotations
 

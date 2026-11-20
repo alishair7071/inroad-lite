@@ -1,7 +1,6 @@
 """Research one company: sourcing reads the site and its job board; api adds,
 when a profile is given, which of the company's open roles fit the person,
-by the same rules and score as matching (Stage B). Mirrors inroad-api, which
-maps sourcing's research into the company record with its fitting roles."""
+by the same rules and score as matching (Stage B)."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""The boundaries Inroad's services keep, held here by imports: web talks
+"""The boundaries between the parts, held by imports: web talks
 only to api; api reaches sourcing only through its contract and one client;
 sourcing never knows about api or web; only sourcing's net layer opens a
 network connection."""

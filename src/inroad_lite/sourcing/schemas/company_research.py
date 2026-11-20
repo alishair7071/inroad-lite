@@ -1,6 +1,5 @@
-"""Sourcing's public contract for researching one company. In Inroad this is
-POST /v1/company-research then GET .../dossier; here a function with the
-same idea: a domain in, what the site says and its open roles out."""
+"""Sourcing's public contract for researching one company: a domain in,
+what the site says and its open roles out."""
 
 from __future__ import annotations
 

@@ -1,8 +1,7 @@
-"""Research one company from its own website. Mirrors the steps of
-inroad-sourcing's research run: discover the site's pages from the
-homepage, read them, extract what they say with evidence, and read the
-company's job board. Pages are read with Olostep scrapes; the facts come
-from rules (discovery/company_facts.py), where Inroad uses an LLM."""
+"""Research one company from its own website: discover the site's pages
+from the homepage, read them, extract what they say with evidence, and
+read the company's job board. Pages are read with Olostep scrapes; the
+facts come from rules (discovery/company_facts.py)."""
 
 from __future__ import annotations
 

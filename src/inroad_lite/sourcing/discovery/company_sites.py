@@ -1,7 +1,6 @@
 """A company's own website from its name, and a one-paragraph summary from
-its homepage. Pure: no network. The name <-> domain check is inroad-sourcing's
-(app/discovery/company_candidates.py): it keeps a name search from resolving
-to a namesake."""
+its homepage. Pure: no network. The name <-> domain check keeps a name
+search from resolving to a namesake."""
 
 from __future__ import annotations
 
@@ -48,8 +47,7 @@ _NOT_PUBLIC = frozenset({"localhost", "local", "internal", "lan", "home", "test"
 
 def research_target(value: str) -> str | None:
     """A public company domain from what a person typed ("https://www.acme.com/about"
-    -> acme.com), or None: no IP addresses, ports, credentials or private names.
-    Mirrors inroad-sourcing's research_target."""
+    -> acme.com), or None: no IP addresses, ports, credentials or private names."""
     text = value.strip().lower()
     parts = urlsplit(text if "//" in text else f"//{text}")
     host = parts.hostname or ""

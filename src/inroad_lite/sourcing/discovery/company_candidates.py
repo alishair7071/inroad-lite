@@ -1,7 +1,6 @@
 """Company discovery parsing: search queries from a request, and candidate
-companies from search hits. Pure: no network. Mirrors inroad-sourcing's
-app/discovery/company_candidates.py, keeping only the job boards the
-queries ask for. Precision over recall: a hit whose employer cannot be read
+companies from search hits. Pure: no network. Only the job boards the
+queries ask for are read. Precision over recall: a hit whose employer cannot be read
 off its URL is rejected, never guessed."""
 
 from __future__ import annotations
@@ -52,7 +51,7 @@ def build_queries(request: DiscoveryRequest, *, limit: int) -> list[str]:
     """ATS-restricted queries, one per (role, work mode), up to `limit`. The
     first round gives each role the next mode in turn, then each role's
     other modes follow, so a few searches still cover every mode. Skills
-    rotate across queries. Wording follows Inroad's live tests: remote asks
+    rotate across queries. The wording was chosen by testing searches live: remote asks
     for postings open anywhere or in the person's country, onsite asks for
     the place with no skill (skills there returned nothing), relocation asks
     for a stated visa or relocation offer."""

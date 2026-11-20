@@ -1,25 +1,23 @@
 # inroad-lite architecture
 
 How inroad-lite is put together: the three parts, what each one owns, how a
-search moves through them, and where it differs from
-[Inroad](https://inroad-web.vercel.app/). It follows the layout of Inroad's
-own `system-architecture.md`, scaled down to the one flow it keeps: find
-companies hiring for a profile.
+search moves through them, and how it compares with a full system like
+[Inroad](https://inroad-web.vercel.app/).
 
 ## 1. The parts
 
-In Inroad these are separate services in separate repos, talking over HTTP.
-Here each is a package under `src/inroad_lite/`, with the same name, the same
-layers and the same rules about who may call whom.
+In a full system these would be separate services talking over HTTP. Here
+each is a package under `src/inroad_lite/`, with its own layers and clear
+rules about who may call whom.
 
-| Part | Mirrors | What it is | Owns |
+| Part | Plays the role of | What it is | Owns |
 |---|---|---|---|
-| `web` | `inroad-web` | The command line | Reading the profile file and printing results. Talks to `api`, nothing else |
-| `api` | `inroad-api` | Routers, services, schemas | The person: their profile, whether a posting fits them (Stage B), the score and its reasons |
-| `sourcing` | `inroad-sourcing` | Entry points, services, board readers, network layer | Everything that reads the outside world: Olostep search and scrape, public job boards. Holds no user data |
-| `core` | each repo's `core/` | Settings, cache, country table | Shared helpers, no feature logic |
+| `web` | the website | The command line | Reading the profile file and printing results. Talks to `api`, nothing else |
+| `api` | the backend | Routers, services, schemas | The person: their profile, whether a posting fits them (Stage B), the score and its reasons |
+| `sourcing` | the data service | Entry points, services, board readers, network layer | Everything that reads the outside world: Olostep search and scrape, public job boards. Holds no user data |
+| `core` | shared helpers | Settings, cache, country table | Shared helpers, no feature logic |
 
-Two rules hold the split together, as in Inroad:
+Two rules hold the split together:
 
 - **Sourcing never sees the person.** It receives roles, at most six skill
   terms, a city and country, and work modes. Never years of experience, the
@@ -124,7 +122,8 @@ Every left-out company is counted with a reason ("posting already closed",
    work mode, up to four, each restricted to job-board sites:
    `"Backend Engineer" Python remote (worldwide OR anywhere OR global OR Pakistan) (site:boards.greenhouse.io OR ...)`.
    Postings on these boards name their employer in the URL, so a hit becomes
-   a company without guessing. The wording follows Inroad's live tests.
+   a company without guessing. The wording was chosen by testing searches
+   live.
 2. **Candidates.** Each hit is read for its board (`greenhouse: gitlab`),
    posting id and role title. Aggregator boards, other roles and other sites
    are rejected with a reason. Hits on the same board are merged.
@@ -141,7 +140,7 @@ Every left-out company is counted with a reason ("posting already closed",
 
 ## 6. How api matches (Stage B)
 
-`match_fit.py`, ported from inroad-api:
+`match_fit.py`, based on Inroad's matching rules:
 
 - **Location.** Onsite or hybrid: the posting is in your country. Remote:
   open to your country by name, region ("APAC") or "worldwide"; "Remote
@@ -153,7 +152,7 @@ Every left-out company is counted with a reason ("posting already closed",
   list ("Rust Engineer" for a Python profile) or a management role is a
   different job.
 
-`match_score.py`, ported from inroad-api: role 35, skills 40, level 10,
+`match_score.py`, based on Inroad's scoring: role 35, skills 40, level 10,
 freshness 15. A part that cannot be checked counts as half, so a posting
 that says less does not outscore one that says more. A company ranks by its
 best role and how many of its roles fit.
@@ -163,8 +162,7 @@ every such match "location not checked".
 
 ### Researching one company
 
-`inroad-lite research <website>` follows the steps of Inroad's research run,
-through the same boundaries:
+`inroad-lite research <website>` goes through the same boundaries:
 
 1. `api/routers/research.py` → `api/services/company_research.py` →
    `sourcing_client.research`. The website is checked first
@@ -174,8 +172,8 @@ through the same boundaries:
    careers, product, team, customers, news) and scrapes them at once.
 3. `discovery/company_facts.py` reads facts by phrase rules (founded, size,
    customers, funding, headquarters, social links), each kept with its
-   sentence and page. Inroad uses an LLM here; rules find less but never
-   misread.
+   sentence and page. Rules find less than a language model would, but
+   never misread.
 4. The job board comes from a link on the home or careers page
    (`discovery/board_links.py`). Pages that load their board in the browser
    show none, so a board named after the site is tried, and kept only when
@@ -201,19 +199,18 @@ flowchart LR
   (`httpx.MockTransport`), so a missing fake fails instead of spending
   credits.
 
-## 8. What is simplified, compared with Inroad
+## 8. What is kept simple
 
-| In Inroad | In inroad-lite |
+| A full system would have | inroad-lite has |
 |---|---|
-| Four services over HTTP, each call signed with a short-lived Ed25519 service token | Packages calling each other through one client function each; `sourcing_client.py` is the one file to change to make sourcing a real service |
-| Postgres, Redis, background workers, run records | None. Results are printed and optionally saved as JSON |
+| Separate services calling each other over the network | Packages calling each other through one client function each; `sourcing_client.py` is the one file to change to make sourcing a separate service |
+| Databases and background workers | None. Results are printed and optionally saved as JSON |
 | A web app | A command line |
-| Eight job boards (also SmartRecruiters, Workable, Recruitee, Workday, iCIMS) | Greenhouse, Lever, Ashby |
-| A company's domain proven by several routes (board pages, careers pages, linked sites) | The board's own data names the company; the website for the "about" line is checked against the name |
-| SafeFetcher checks every resolved IP on every redirect | Fixed public job-board hosts only, no redirects |
-| Places left out, company-wide visa evidence, learned preferences from ratings | Not included |
-| Skills weighed by whether the person's work history shows them | Skills count when the posting names them |
-| Research crawls the site within a request budget and extracts facts with an LLM, with evidence | Up to four pages read through Olostep scrapes; facts by phrase rules, with evidence |
+| More job boards | Greenhouse, Lever, Ashby |
+| More ways to prove which website a company owns | The board's own data names the company; the website for the "about" line is checked against the name |
+| Stricter network safety checks | Fixed public job-board hosts only, no redirects |
+| More signals about the person | Role, level, location and the skills a posting names |
+| Deeper research of a company's site | Up to four pages read through Olostep scrapes; facts by phrase rules, with evidence |
 
 ## 9. Configuration
 

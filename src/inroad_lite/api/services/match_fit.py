@@ -1,7 +1,6 @@
 """Whether a proven posting fits this person: where they can work, their
 level, and their role. Personal, so it lives in api and never in sourcing.
-Pure. Ported from inroad-api's app/services/match_fit.py; simplified: no
-places left out, no company-wide visa evidence, and skills count in the
+Pure. Based on Inroad's matching rules, simplified: skills count in the
 score (match_score) instead of ruling a posting out.
 
 Location, per work preference:

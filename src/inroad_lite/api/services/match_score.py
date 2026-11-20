@@ -1,9 +1,8 @@
 """How well one open role fits the person, 0 to 100, with every part shown.
 Pure and deterministic: no model call, and each point comes from a fact
 that can be shown. Location is not scored: match_fit already left out every
-role the person cannot work in. Ported from inroad-api's
-app/services/match_score.py; simplified: a skill counts when the posting
-names it (Inroad also weighs whether the person's work history shows it)."""
+role the person cannot work in. Based on Inroad's scoring, simplified: a
+skill counts when the posting names it."""
 
 from __future__ import annotations
 

@@ -1,7 +1,6 @@
 """Stage A of matching: from a request to proven companies. Builds the
 queries, runs them through Olostep at the same time, merges the hits by
-company board, then reads each board to prove an open posting. Mirrors
-inroad-sourcing's app/services/company_discovery.py."""
+company board, then reads each board to prove an open posting."""
 
 from __future__ import annotations
 

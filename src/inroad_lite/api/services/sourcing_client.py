@@ -1,6 +1,5 @@
-"""The only way api reaches sourcing. In Inroad this is a signed HTTP call
-(a short-lived Ed25519 service token); here it is a function call, so this
-file is the one place to change to make sourcing a real service."""
+"""The only way api reaches sourcing. Here it is a function call, so this
+file is the one place to change to run sourcing as a separate service."""
 
 from __future__ import annotations
 

@@ -1,6 +1,6 @@
 """ISO 3166-1 alpha-2 codes from country names and codes, to read a profile's
-location and the countries a posting names. Pure. Copied from inroad-api's
-app/utils/countries.py; Inroad keeps a copy per service, here core/ is shared."""
+location and the countries a posting names. Pure. Shared by api and
+sourcing."""
 
 from __future__ import annotations
 

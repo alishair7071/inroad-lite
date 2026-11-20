@@ -1,7 +1,7 @@
-"""What a company's own pages say about it, read by rules. Pure. Inroad
-reads its pages with an LLM; here each fact is a phrase pattern, kept only
-when a sentence states it plainly, and always with that sentence as its
-evidence. Precision over recall: a fact not stated this way is left out."""
+"""What a company's own pages say about it, read by rules. Pure. Each fact
+is a phrase pattern, kept only when a sentence states it plainly, and
+always with that sentence as its evidence. Precision over recall: a fact
+not stated this way is left out."""
 
 from __future__ import annotations
 
