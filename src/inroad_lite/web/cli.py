@@ -84,8 +84,13 @@ def _print(report: MatchReport) -> None:
         f"{report.results_seen} results -> {report.boards_read} job boards read -> "
         + (
             "1 company that fits you"
-            if len(report.companies) == 1
-            else f"{len(report.companies)} companies that fit you"
+            if report.companies_fitting == 1
+            else f"{report.companies_fitting} companies that fit you"
+        )
+        + (
+            f", best {len(report.companies)} shown"
+            if len(report.companies) < report.companies_fitting
+            else ""
         )
         + (" (relaxed: location and level not checked)" if report.relaxed else "")
         + "\n"

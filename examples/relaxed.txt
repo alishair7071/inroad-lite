@@ -1,5 +1,5 @@
 Searched 4 queries.
-40 results -> 25 job boards read -> 10 companies that fit you (relaxed: location and level not checked)
+40 results -> 25 job boards read -> 20 companies that fit you, best 10 shown (relaxed: location and level not checked)
 
  1. YipitData   83 (strong)   [greenhouse: yipitdata]
     yipitdata.com  YipitData tracks trillions in live consumer and business spend, so you can monitor performance, spot shifts early, and act with confidence.

@@ -2,215 +2,155 @@
 
 [![CI](https://github.com/alishair7071/inroad-lite/actions/workflows/ci.yml/badge.svg)](https://github.com/alishair7071/inroad-lite/actions/workflows/ci.yml)
 
-Find companies that are hiring for your roles right now, check each opening
-on the company's own job board, and rank them by how well they fit you, with
-the reason for every point.
+**Tell it the jobs you want. It finds companies hiring for them right now,
+checks every opening is real, and ranks them by how well they fit you, with
+the reason for each one.** It uses [Olostep](https://olostep.com) to search
+the web and read company websites.
 
-It is a small, standalone version of the company discovery and matching in
-[Inroad](https://inroad-web.vercel.app/), built on
-[Olostep](https://olostep.com) search and scrape plus the public Greenhouse,
-Lever and Ashby job board APIs. The folders mirror Inroad's services
-(`web`, `api`, `sourcing`); [docs/architecture.md](docs/architecture.md)
-shows how.
+## What this project is
 
-```text
-profile.yaml ─► Olostep search ─► companies from job-board links ─► each board read:
-                (4 at once)                                         is the posting open?
-             ─► does it fit you? (role, level, location) ─► score 0-100 with reasons
-             ─► Olostep scrape of the top companies' homepages ─► ranked list
+[Inroad](https://inroad-web.vercel.app/) is a platform that helps people find
+companies worth applying to, research them, and reach out.
+
+**This is not the full Inroad.** It is a smaller, open-source version that
+keeps only the core: finding companies and matching them to a person.
+
+- The full Inroad is several separate apps (a website, a backend, a data
+  service), each in its own repository, with databases and background jobs.
+- inroad-lite is **one repository**. Each of those apps becomes a **folder**
+  with the same name and the same job, so the design is the same, just
+  smaller. It runs from the command line, with no database.
+
+## How it works
+
+You describe yourself in a short file: the roles you want, your skills, where
+you live, and whether you want remote work or to relocate. inroad-lite then:
+
+1. **Searches the web with Olostep** for open jobs matching your roles.
+2. **Checks each job on the company's own job board**, so only real, still-open
+   jobs are kept.
+3. **Matches the jobs to you**: is it your kind of role, your level, and can
+   you work it from where you live?
+4. **Scores and ranks** the companies, and explains every score.
+5. **Describes the top companies** by reading their homepage with Olostep.
+
+### The parts
+
+```mermaid
+flowchart LR
+    you(["You"])
+    subgraph lite["inroad-lite"]
+        web["<b>web</b><br/>where you start it<br/>and see the results"]
+        api["<b>api</b><br/>matches jobs to you<br/>and ranks them"]
+        sourcing["<b>sourcing</b><br/>finds companies<br/>on the internet"]
+    end
+    olostep["<b>Olostep</b><br/>web search and<br/>website reading"]
+    boards["<b>Company job boards</b><br/>Greenhouse, Lever, Ashby"]
+
+    you --> web --> api --> sourcing
+    sourcing --> olostep
+    sourcing --> boards
 ```
 
-## What a run looks like
+- **web** is the front door. In the full Inroad it is the website; here it is
+  a command you type.
+- **api** knows about you. It decides which jobs suit you and ranks them.
+- **sourcing** knows about the outside world. It finds companies and checks
+  their jobs. It never sees your full profile, only the roles, skills and
+  place it needs to search.
 
-Real output, lightly trimmed, for [`profile.example.yaml`](profile.example.yaml)
-(Backend or DevOps Engineer, 2 years, in Lahore, open to remote work or
-relocating to Europe or Canada):
+### What happens when you run a search
 
-```text
-$ uv run inroad-lite search profile.example.yaml
-Searched 4 queries.
-40 results -> 25 job boards read -> 1 company that fits you
-
- 1. Schuberg Philis   74 (good)   [greenhouse: schubergphilis]
-    schubergphilis.com  Mission-critical IT has always been at the heart of our work. ...
-    Windows DevOps Automation Engineer   85
-      Role     Matches your target DevOps Engineer
-      Skills   Names Python, Docker, Kubernetes
-      Level    Mid level, fits your 2 years
-      Posted   98 days ago
-      Location Schiphol-Rijk, North Holland, Netherlands, with relocation support
-      https://schubergphilis.com/careers/7809600003?greenhouse=1&gh_jid=7809600003
-
-Left out:
-   19  not open where you can work
-   11  not the role searched for
-    3  posting already closed
-    1  not a Greenhouse, Lever or Ashby link
-    1  job board could not be read
-    1  wrong level for your experience
+```mermaid
+flowchart TB
+    a["1. Your profile<br/>roles, skills, location"]
+    b["2. Search the web<br/>(Olostep search)"]
+    c["3. Check each job on the<br/>company's own job board"]
+    d["4. Keep the jobs that fit you<br/>and score them"]
+    e["5. Describe the top companies<br/>(Olostep reads their homepage)"]
+    f["6. Ranked list<br/>with reasons"]
+    a --> b --> c --> d --> e --> f
 ```
 
-Most remote roles are open only in the US or Europe, so for someone in
-Pakistan the strict rules keep one company out of 25, and say why for every
-one they drop. `--relaxed` checks the role only:
+1. **Your profile.** For example: Backend Engineer, Python and Docker, living
+   in Lahore, open to remote work.
+2. **Search.** sourcing turns that into a few web searches and runs them
+   through Olostep at the same time. It searches only company job boards, so
+   every result points to a real employer.
+3. **Check.** A search result can be out of date, so sourcing opens each
+   company's job board and keeps the company only if the job is still open.
+4. **Fit and score.** api checks each job against you. A remote job open only
+   in the US does not fit someone in Pakistan; a senior job does not fit
+   someone with one year of experience. Jobs that fit get a score out of 100.
+5. **Describe.** For the best few companies, sourcing finds their website and
+   Olostep reads the homepage, giving a one-line description.
+6. **Result.** You get the companies, best first. Every score shows why, and
+   every company left out is counted with the reason.
+
+A shortened real result, from a `--relaxed` run (with all checks on, the
+strict rules kept 1 company for this profile, because most remote jobs are
+open only in the US or Europe):
 
 ```text
-$ uv run inroad-lite search profile.example.yaml --relaxed
-40 results -> 25 job boards read -> 10 companies that fit you (relaxed: location and level not checked)
+40 results -> 25 job boards read -> 20 companies that fit you, best 10 shown (relaxed)
 
- 1. YipitData   83 (strong)   [greenhouse: yipitdata]
-    yipitdata.com  YipitData tracks trillions in live consumer and business spend, so you can ...
+ 1. YipitData   83 (strong)
+    yipitdata.com  YipitData tracks trillions in live consumer and business spend ...
     Backend Engineer   97
       Role     Matches your target Backend Engineer
       Skills   Names Python, Docker, AWS, Kubernetes
       Level    Mid level, fits your 2 years
       Posted   23 days ago
-      Location India Remote (location not checked)
- ...
 ```
 
-Full output and JSON for both runs are in [`examples/`](examples/). Job
-boards are read live on every run, so counts move a little from one run to
-the next as postings open and close.
+Full examples are in [`examples/`](examples/).
 
-## Quick start
+## Where Olostep is used
 
-You need [uv](https://docs.astral.sh/uv/) and an [Olostep](https://olostep.com) API key.
+Every call to Olostep goes through **one file**, so it is easy to see exactly
+how Olostep is used. There are three kinds of call:
+
+```mermaid
+flowchart LR
+    find["Finding companies"]
+    site["Finding a company's website"]
+    read["Describing a company"]
+    client["olostep.py<br/>the one file that<br/>talks to Olostep"]
+    olostep["Olostep"]
+
+    find -- "search" --> client
+    site -- "search" --> client
+    read -- "scrape" --> client
+    client --> olostep
+```
+
+| What it does | File to open |
+|---|---|
+| The only code that calls Olostep: search and scrape, with a time limit, a retry, and a running count of credits | [`sourcing/net/olostep.py`](src/inroad_lite/sourcing/net/olostep.py) |
+| Writes the job searches sent to Olostep | [`sourcing/discovery/company_candidates.py`](src/inroad_lite/sourcing/discovery/company_candidates.py) |
+| Runs those searches, several at once, to find companies | [`sourcing/services/company_discovery.py`](src/inroad_lite/sourcing/services/company_discovery.py) |
+| Finds a company's website with a search, then reads its homepage with a scrape | [`sourcing/services/company_profile.py`](src/inroad_lite/sourcing/services/company_profile.py) |
+| Sets Olostep up with your key, the time limit, and a cache so repeat runs cost nothing | [`sourcing/api/dependencies.py`](src/inroad_lite/sourcing/api/dependencies.py) |
+
+A full search costs about 20 to 40 Olostep credits (5 per search, 1 per page
+read). Answers are saved for 6 hours, so running it again costs nothing.
+
+## Try it
+
+You need [uv](https://docs.astral.sh/uv/) and an Olostep API key.
 
 ```bash
 git clone https://github.com/alishair7071/inroad-lite.git
 cd inroad-lite
 uv sync
-cp .env.example .env                 # then put your OLOSTEP_API_KEY in .env
-uv run inroad-lite check             # one search: confirms the key works (5 credits)
-cp profile.example.yaml profile.yaml # then edit it to describe yourself
-uv run inroad-lite search profile.yaml
+cp .env.example .env                  # put your OLOSTEP_API_KEY in .env
+uv run inroad-lite check              # confirms the key works
+uv run inroad-lite search profile.example.yaml
 ```
 
-### The profile
+Copy [`profile.example.yaml`](profile.example.yaml) to describe yourself.
+Add `--relaxed` to skip the location and level checks.
 
-```yaml
-roles: [Backend Engineer, DevOps Engineer]   # up to 4
-skills: [Python, Docker, AWS, Kubernetes]    # the first 6 go into searches
-location: Lahore, Pakistan                   # "City, Country"
-work_preference: [remote, relocation]        # remote, onsite, hybrid, relocation
-relocation_places: [Europe, Canada]          # optional
-years_experience: 2                          # optional, used for level
-```
-
-### Options
-
-| Option | What it does |
-|---|---|
-| `--relaxed` | Check the role only, not location or level. Matches are labelled "location not checked" |
-| `--about N` | Describe the top N companies from their homepage (default 3, `0` to skip) |
-| `--fresh` | Ask Olostep again instead of using the 6-hour cache |
-| `--json FILE` | Also save the result as JSON |
-
-## How it works
-
-**Sourcing finds and proves (Stage A).** It turns the profile into up to four
-searches restricted to job-board sites, for example
-`"Backend Engineer" Python remote (worldwide OR anywhere OR global OR Pakistan) (site:boards.greenhouse.io OR ...)`,
-and runs them through Olostep at the same time. A Greenhouse, Lever or Ashby
-link names its employer in the URL, so each result becomes a company without
-guessing. A search result is only a lead: sourcing then reads that company's
-board through its public API, once per board, and keeps the company only if
-the posting is still open.
-
-**Api decides what fits you (Stage B).** Inroad's rules: is the role open
-where you can work (a "Remote (US)" role is not open to Pakistan), is it
-your level, is it your kind of role (a "Rust Engineer" posting is not a
-Python backend role). The roles that fit get a 0-100 score from role (35),
-skills named (40), level (10) and how recent (15), with every part shown.
-
-**The best few get an "about".** Their website comes from a job link on the
-company's own site when there is one (free), otherwise from one Olostep
-search checked against the company name. Then Olostep scrapes the homepage
-and the first paragraph that describes the company is kept.
-
-Sourcing never sees the full profile: only roles, a few skills, the place
-and work modes cross to it, as in Inroad. A test checks the boundaries
-between `web`, `api` and `sourcing` on every run. More detail, with
-diagrams: [docs/architecture.md](docs/architecture.md).
-
-## Notes on using Olostep
-
-What I measured while building this (a handful of runs, not a benchmark):
-
-- **`site:` searches are slow, plain ones are not.** One search with four
-  `site:` filters took 43.7 s on 2026-11-19; a plain query took 4.3 s.
-  The next day four filtered searches running at once finished in about
-  15 s. With Inroad's original 30 s timeout, most filtered searches were cut
-  off that first evening and every company scan failed, so the default here
-  is 60 s (`OLOSTEP_TIMEOUT_SECONDS`), with one retry.
-- **Run searches at the same time.** They are independent, so four at once
-  cost the time of the slowest one, not the sum.
-- **Every response says what it cost.** `credits_consumed` came back on each
-  call: 5 per search and 1 per scrape in these runs. inroad-lite adds them up
-  and prints the total, so you always see what a run spent.
-- **Cache what you can.** Answers are kept for 6 hours, so running the same
-  profile again costs nothing. A fresh strict run cost about 21 credits
-  (4 searches, 1 scrape); a fresh `--relaxed` run with three "about" lines
-  about 38.
-- **`json_content` is a JSON string inside the JSON response**, so search
-  results are parsed twice (`olostep.py` shows how).
-- **A scrape can come back in another language.** One company's homepage
-  arrived in Russian, probably localised by where the request came from.
-  The summary step skips paragraphs that are mostly another script and
-  leaves the "about" blank rather than show the wrong thing.
-
-Job boards had their own surprises: Greenhouse's job list with descriptions
-was 3.9 MB for one company (175 KB without, so descriptions are fetched per
-posting), and Ashby sends every posting with its full description (4 to 14 MB
-for larger companies).
-
-## Project layout
-
-```text
-src/inroad_lite/
-  web/cli.py                       the command line (plays inroad-web)
-  api/                             plays inroad-api
-    routers/                       entry points web calls
-    schemas/                       profile, results
-    services/match_discovery.py    Stage B: fit, score, rank
-    services/match_fit.py          role, level and location rules
-    services/match_score.py        0-100 score with reasons
-    services/sourcing_client.py    the only way api reaches sourcing
-  sourcing/                        plays inroad-sourcing
-    api/                           entry points api calls
-    schemas/                       the contract api sees
-    services/company_discovery.py  Stage A: search, merge, prove
-    services/candidate_proof.py    read each board, is the posting open
-    services/company_profile.py    website and "about" line
-    discovery/                     queries, link reading, visa statements (no network)
-    ats/                           Greenhouse, Lever, Ashby readers (no network)
-    net/olostep.py                 the only code that calls Olostep
-    net/fetcher.py                 the only code that calls job boards
-  core/                            settings, cache, country table
-tests/                             mirrors src; scripted Olostep and job boards
-```
-
-## Development
-
-```bash
-uv run pytest                                      # 114 tests, no key or network needed
-uv run ruff check . && uv run ruff format --check .
-uv run mypy                                        # strict
-```
-
-CI runs all of it on Python 3.11 and 3.12.
-
-## Limits
-
-- Three job boards (Greenhouse, Lever, Ashby). Inroad reads eight.
-- Location and level come from what a posting states; a posting that names
-  no place for a remote role is not counted as open to you.
-- The "about" line is the first suitable paragraph of a homepage, not a
-  summary written by a model.
-- Searches depend on what Olostep's search returns that day.
-
-## License
-
-MIT. Built from Inroad's code (MIT, © Abdul Moiz and Inroad contributors);
-see [LICENSE](LICENSE).
+For engineers: a detailed technical write-up is in
+[docs/architecture.md](docs/architecture.md), and `uv run pytest` runs the
+tests without a key.

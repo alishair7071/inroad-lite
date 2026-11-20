@@ -8,6 +8,7 @@
   "failed_searches": [],
   "results_seen": 40,
   "boards_read": 25,
+  "companies_fitting": 1,
   "companies": [
     {
       "name": "Schuberg Philis",
@@ -48,11 +49,10 @@
     }
   ],
   "left_out": {
-    "not open where you can work": 19,
+    "not open where you can work": 20,
     "not the role searched for": 11,
     "posting already closed": 3,
     "not a Greenhouse, Lever or Ashby link": 1,
-    "job board could not be read": 1,
     "wrong level for your experience": 1
   },
   "relaxed": false,

@@ -39,7 +39,8 @@ class MatchReport(BaseModel):
     failed_searches: list[str]
     results_seen: int
     boards_read: int
-    # Best first.
+    # How many companies fit; `companies` holds the best of them, best first.
+    companies_fitting: int
     companies: list[CompanyResult]
     # Plain-words reason -> how many were left out for it.
     left_out: dict[str, int]

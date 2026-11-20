@@ -99,6 +99,12 @@ def test_relaxed_keeps_roles_whatever_their_location(monkeypatch):
     assert report.relaxed
 
 
+def test_the_count_says_how_many_fit_even_when_fewer_are_shown(monkeypatch):
+    monkeypatch.setattr("inroad_lite.api.services.match_discovery.MAX_COMPANIES", 1)
+    report = run(monkeypatch, relaxed=True, about=0)
+    assert (report.companies_fitting, len(report.companies)) == (2, 1)
+
+
 def test_a_missing_key_is_a_clear_error_not_a_crash():
     with pytest.raises(ApiError) as caught:
         asyncio.run(match.find_companies(PROFILE))

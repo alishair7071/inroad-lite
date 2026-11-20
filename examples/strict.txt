@@ -12,11 +12,10 @@ Searched 4 queries.
       https://schubergphilis.com/careers/7809600003?greenhouse=1&gh_jid=7809600003
 
 Left out:
-   19  not open where you can work
+   20  not open where you can work
    11  not the role searched for
     3  posting already closed
     1  not a Greenhouse, Lever or Ashby link
-    1  job board could not be read
     1  wrong level for your experience
 
 Olostep: 0 calls, 0 credits, 5 answered from cache.

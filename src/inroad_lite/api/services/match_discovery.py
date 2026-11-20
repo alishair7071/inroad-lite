@@ -71,6 +71,7 @@ async def find_companies(
 ) -> MatchReport:
     found = await sourcing_client.discover(discovery_request(profile, fresh=fresh))
     ranked, unfit = rank(profile, found.companies, relaxed=relaxed)
+    fitting = len(ranked)
     ranked = ranked[:MAX_COMPANIES]
     profiles = await asyncio.gather(
         *(
@@ -92,6 +93,7 @@ async def find_companies(
         failed_searches=found.failed_queries,
         results_seen=found.hits_seen,
         boards_read=found.candidates_found,
+        companies_fitting=fitting,
         companies=[
             _company(r, profiles[i] if i < len(profiles) else None) for i, r in enumerate(ranked)
         ],
