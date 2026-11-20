@@ -223,10 +223,10 @@ inroad-lite also has a simple web page with the same two features: find
 companies, and research one company. Start it on your computer:
 
 ```bash
-uv run uvicorn main:app --port 8000
+uv run uvicorn main:app --port 8010
 ```
 
-Then open http://127.0.0.1:8000. Put `INROAD_LITE_ACCESS_CODE=` with a code
+Then open http://127.0.0.1:8010. Put `INROAD_LITE_ACCESS_CODE=` with a code
 of your choice in `.env` first: every run spends Olostep credits, so the page
 asks for that code and refuses to run without one. Runs are also limited per
 hour (`INROAD_LITE_RUNS_PER_HOUR`, default 10).
