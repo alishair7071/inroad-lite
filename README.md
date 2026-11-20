@@ -154,3 +154,54 @@ Add `--relaxed` to skip the location and level checks.
 For engineers: a detailed technical write-up is in
 [docs/architecture.md](docs/architecture.md), and `uv run pytest` runs the
 tests without a key.
+
+## How to test it
+
+After the steps in **Try it**, run these one by one. Each says what you
+should see.
+
+1. **Check your Olostep key works.**
+   ```bash
+   uv run inroad-lite check
+   ```
+   You should see something like `Olostep key works: 12 results, 5 credits used.`
+
+2. **Run a search with the example profile.**
+   ```bash
+   uv run inroad-lite search profile.example.yaml
+   ```
+   Takes under a minute the first time. You get a ranked list of companies,
+   each with a score and the reasons, then a "Left out" list saying why the
+   other companies were dropped, and the Olostep credits the run used.
+
+3. **Run it with the checks relaxed.**
+   ```bash
+   uv run inroad-lite search profile.example.yaml --relaxed
+   ```
+   You should see more companies. Each one marked "location not checked" is
+   a job you might not be able to work from your country.
+
+4. **Run the same search again.**
+   ```bash
+   uv run inroad-lite search profile.example.yaml
+   ```
+   Same result, much faster, and the last line says `0 credits`: Olostep's
+   answers were saved and reused.
+
+5. **Search for yourself.** Copy `profile.example.yaml` to `profile.yaml`,
+   change the roles, skills and location, and run:
+   ```bash
+   uv run inroad-lite search profile.yaml
+   ```
+
+6. **Save the result to a file**, to look at or share:
+   ```bash
+   uv run inroad-lite search profile.yaml --json results/me.json
+   ```
+
+7. **Run the automated tests.** No key and no internet needed: they use a
+   pretend Olostep and pretend job boards.
+   ```bash
+   uv run pytest
+   ```
+   Every test should pass in a few seconds.
