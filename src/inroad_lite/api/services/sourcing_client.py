@@ -4,7 +4,7 @@ file is the one place to change to make sourcing a real service."""
 
 from __future__ import annotations
 
-from inroad_lite.sourcing.api import company_discovery, company_profile, health
+from inroad_lite.sourcing.api import company_discovery, company_profile, company_research, health
 from inroad_lite.sourcing.schemas.company_discovery import (
     DiscoveryRequestIn,
     DiscoveryResponse,
@@ -12,6 +12,7 @@ from inroad_lite.sourcing.schemas.company_discovery import (
     SourcingError,
 )
 from inroad_lite.sourcing.schemas.company_profile import CompanyProfileIn, CompanyProfileOut
+from inroad_lite.sourcing.schemas.company_research import CompanyResearchIn, CompanyResearchOut
 
 
 class SourcingFailed(Exception):
@@ -31,6 +32,13 @@ async def discover(request: DiscoveryRequestIn) -> DiscoveryResponse:
 async def profile(request: CompanyProfileIn) -> CompanyProfileOut:
     try:
         return await company_profile.profile(request)
+    except SourcingError as exc:
+        raise SourcingFailed(exc.code, exc.message) from None
+
+
+async def research(request: CompanyResearchIn) -> CompanyResearchOut:
+    try:
+        return await company_research.research(request)
     except SourcingError as exc:
         raise SourcingFailed(exc.code, exc.message) from None
 

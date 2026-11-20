@@ -7,6 +7,7 @@ from __future__ import annotations
 from inroad_lite.core.settings import load_settings
 from inroad_lite.sourcing.api import dependencies
 from inroad_lite.sourcing.domain.company_discovery import DiscoveryRequest, ProvenCompany
+from inroad_lite.sourcing.domain.jobs import Job
 from inroad_lite.sourcing.domain.olostep import OlostepAuthError
 from inroad_lite.sourcing.schemas.company_discovery import (
     CompanyOut,
@@ -58,19 +59,20 @@ def _company(company: ProvenCompany) -> CompanyOut:
         company_name=company.company_name,
         ats_provider=company.ats_provider,
         ats_token=company.ats_token,
-        postings=[
-            PostingOut(
-                posting_id=job.external_id,
-                title=job.title,
-                url=job.url,
-                locations=list(job.locations),
-                workplace=job.workplace,
-                country=job.country,
-                description=job.description,
-                posted_at=job.posted_at,
-                visa_sponsorship=job.visa_sponsorship,
-                relocation_support=job.relocation_support,
-            )
-            for job in company.postings
-        ],
+        postings=[posting_out(job) for job in company.postings],
+    )
+
+
+def posting_out(job: Job) -> PostingOut:
+    return PostingOut(
+        posting_id=job.external_id,
+        title=job.title,
+        url=job.url,
+        locations=list(job.locations),
+        workplace=job.workplace,
+        country=job.country,
+        description=job.description,
+        posted_at=job.posted_at,
+        visa_sponsorship=job.visa_sponsorship,
+        relocation_support=job.relocation_support,
     )

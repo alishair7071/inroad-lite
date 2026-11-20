@@ -115,17 +115,18 @@ def rank(
         fitting = [(p, v) for p, v in verdicts if v.ok]
         if not fitting:
             # A company counts once, by its first posting's reason.
-            unfit[_unfit_words(verdicts[0][1].reason)] += 1
+            unfit[unfit_words(verdicts[0][1].reason)] += 1
             continue
         roles = sorted(
-            ((_score(profile, p, v.reason), p) for p, v in fitting), key=lambda pair: -pair[0].score
+            ((score_posting(profile, p, v.reason), p) for p, v in fitting),
+            key=lambda pair: -pair[0].score,
         )
         ranked.append(_Ranked(company, score_company(roles[0][0], len(roles)), roles))
     ranked.sort(key=lambda r: (-r.score, r.company.company_name.lower()))
     return ranked, unfit
 
 
-def _score(profile: Profile, posting: PostingOut, location: str) -> MatchScore:
+def score_posting(profile: Profile, posting: PostingOut, location: str) -> MatchScore:
     return score_role(
         targets=profile.roles,
         skills=profile.skills,
@@ -134,10 +135,11 @@ def _score(profile: Profile, posting: PostingOut, location: str) -> MatchScore:
         text=f"{posting.title}\n{posting.description or ''}",
         posted_at=posting.posted_at,
         location=location,
+        described=posting.description is not None,
     )
 
 
-def _unfit_words(reason: str) -> str:
+def unfit_words(reason: str) -> str:
     if reason.startswith("location"):
         return "not open where you can work"
     if reason in _LEVEL_REASONS:
@@ -155,12 +157,12 @@ def _company(ranked: _Ranked, profile: CompanyProfileOut | None) -> CompanyResul
         band=band(ranked.score),
         website=profile.domain if profile else None,
         about=profile.summary if profile else None,
-        best_role=_role(best, best_posting),
-        other_roles=[_role(score, posting) for score, posting in others],
+        best_role=role_result(best, best_posting),
+        other_roles=[role_result(score, posting) for score, posting in others],
     )
 
 
-def _role(score: MatchScore, posting: PostingOut) -> RoleResult:
+def role_result(score: MatchScore, posting: PostingOut) -> RoleResult:
     return RoleResult(
         title=posting.title,
         url=posting.url,

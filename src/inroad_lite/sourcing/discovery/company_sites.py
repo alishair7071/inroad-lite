@@ -30,8 +30,40 @@ _NAME_NOISE = frozenset(
 # Second-level labels under a country code: acme.co.uk, acme.com.pk.
 _SECOND_LEVEL = frozenset({"co", "com", "org", "net", "ac", "gov", "edu"})
 _MARKDOWN_LINK = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
+_LEFTOVER_LINK = re.compile(r"\]\([^)]*\)")
 _SENTENCE_END = re.compile(r"[a-z0-9)][.!?](\s|$)")
+# A short block built around a call to action is a banner, not a description.
+_CALL_TO_ACTION = re.compile(
+    r"\b(?:read|learn|see|find out)\s+(?:the|more)\b|\bannouncement\b|\bsign up\b"
+    r"|\bget started\b|\bbook a demo\b|\bfree trial\b|\bregister now\b",
+    re.I,
+)
+_BANNER_CHARS = 160
 _SUMMARY_CHARS = 240
+
+
+_LABEL = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$")
+_NOT_PUBLIC = frozenset({"localhost", "local", "internal", "lan", "home", "test", "example"})
+
+
+def research_target(value: str) -> str | None:
+    """A public company domain from what a person typed ("https://www.acme.com/about"
+    -> acme.com), or None: no IP addresses, ports, credentials or private names.
+    Mirrors inroad-sourcing's research_target."""
+    text = value.strip().lower()
+    parts = urlsplit(text if "//" in text else f"//{text}")
+    host = parts.hostname or ""
+    if parts.username or parts.password or parts.port or not host:
+        return None
+    labels = host.split(".")
+    if (
+        len(labels) < 2
+        or not all(_LABEL.match(label) for label in labels)
+        or labels[-1].isdigit()
+        or labels[-1] in _NOT_PUBLIC
+    ):
+        return None
+    return registrable_domain(host)
 
 
 def resolution_query(name: str) -> str:
@@ -94,7 +126,9 @@ def summary_from_markdown(markdown: str, name: str = "") -> str | None:
 
 
 def _paragraph(block: str) -> str | None:
-    text = " ".join(_MARKDOWN_LINK.sub(r"\1", block).split())
+    # A link whose text holds brackets leaves "](/path)" behind: drop it.
+    plain = _LEFTOVER_LINK.sub("", _MARKDOWN_LINK.sub(r"\1", block)).replace("[", "")
+    text = " ".join(plain.split())
     letters = [c for c in text if c.isalpha()]
     if (
         text.startswith(("#", "|", "-", "*", ">", "!"))
@@ -104,6 +138,7 @@ def _paragraph(block: str) -> str | None:
         or block.count("](") > 3
         or not _SENTENCE_END.search(text)
         or sum(c.isascii() for c in letters) < 0.8 * len(letters)
+        or (len(text) < _BANNER_CHARS and _CALL_TO_ACTION.search(text))
     ):
         return None
     return text

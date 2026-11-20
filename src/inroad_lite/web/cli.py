@@ -13,9 +13,11 @@ import yaml
 from pydantic import ValidationError
 
 from inroad_lite.api.routers import health, match
+from inroad_lite.api.routers import research as research_router
 from inroad_lite.api.schemas.errors import ApiError
 from inroad_lite.api.schemas.match import CompanyResult, MatchReport, RoleResult
 from inroad_lite.api.schemas.profile import Profile
+from inroad_lite.api.schemas.research import ResearchReport
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -38,10 +40,29 @@ def main(argv: list[str] | None = None) -> int:
         help="describe the top N companies from their homepage (Olostep scrape; 0 to skip)",
     )
     search.add_argument("--json", type=Path, help="also write the result to this file")
+    research = commands.add_parser("research", help="research one company from its website")
+    research.add_argument("website", help="the company's website, for example gitlab.com")
+    research.add_argument(
+        "--profile", type=Path, help="also show which of its open roles fit this profile"
+    )
+    research.add_argument(
+        "--relaxed", action="store_true", help="with --profile: check the role only"
+    )
+    research.add_argument(
+        "--pages",
+        type=int,
+        default=4,
+        metavar="N",
+        help="pages to read besides the homepage (one Olostep scrape each, 0 to 8)",
+    )
+    research.add_argument("--fresh", action="store_true", help="ask Olostep again, skip the cache")
+    research.add_argument("--json", type=Path, help="also write the result to this file")
     args = parser.parse_args(argv)
 
     if args.command == "check":
         return asyncio.run(_check())
+    if args.command == "research":
+        return asyncio.run(_research(args))
     return asyncio.run(_search(args))
 
 
@@ -56,12 +77,83 @@ async def _check() -> int:
     return 0
 
 
-async def _search(args: argparse.Namespace) -> int:
-    path: Path = args.profile
+def _load_profile(path: Path) -> Profile | None:
     try:
-        profile = Profile.model_validate(yaml.safe_load(path.read_text(encoding="utf-8")) or {})
+        return Profile.model_validate(yaml.safe_load(path.read_text(encoding="utf-8")) or {})
     except (OSError, yaml.YAMLError, ValidationError) as exc:
         print(f"Could not read the profile {path}:\n{exc}")
+        return None
+
+
+async def _research(args: argparse.Namespace) -> int:
+    profile = _load_profile(args.profile) if args.profile else None
+    if args.profile and profile is None:
+        return 2
+    try:
+        report = await research_router.research_company(
+            args.website,
+            profile=profile,
+            relaxed=args.relaxed,
+            pages=args.pages,
+            fresh=args.fresh,
+        )
+    except ApiError as exc:
+        print(f"Research failed ({exc.code}): {exc.message}")
+        return 1
+    _print_research(report)
+    if args.json:
+        args.json.parent.mkdir(parents=True, exist_ok=True)
+        args.json.write_text(json.dumps(report.model_dump(), indent=2), encoding="utf-8")
+        print(f"Saved to {args.json}")
+    return 0
+
+
+def _print_research(report: ResearchReport) -> None:
+    print(f"{report.name}  ({report.domain})")
+    if report.summary:
+        print(report.summary)
+    facts = [fact for fact in report.facts if fact.category != "Overview"]
+    if facts:
+        print("\nWhat the website says:")
+        for fact in facts:
+            print(f"  {fact.category:<13}{fact.text}")
+            if fact.quote != fact.text:
+                print(f'  {"":<13}"{fact.quote}"')
+            print(f"  {'':<13}source: {fact.source}")
+    print(f"\nPages read ({len(report.pages_read)}):")
+    for page in report.pages_read:
+        print(f"  {page}")
+    print()
+    if report.job_board:
+        print(f"Open roles: {report.open_roles_total} on {report.job_board}")
+        if report.board_note:
+            print(f"  (board {report.board_note})")
+        for role in report.open_roles:
+            where = ", ".join(role.locations) or "location not stated"
+            print(f"  - {role.title}  ({where})")
+        hidden = report.open_roles_total - len(report.open_roles)
+        if hidden > 0:
+            print(f"  ... and {hidden} more")
+    else:
+        print(f"Open roles: none listed ({report.board_note})")
+    if report.roles_that_fit is not None:
+        print(f"\nRoles that fit you: {len(report.roles_that_fit)}")
+        for fitting in report.roles_that_fit:
+            _print_role(fitting)
+        if report.left_out:
+            print("  Left out:")
+            for reason, count in report.left_out.items():
+                print(f"    {count:>3}  {reason}")
+    spend = report.olostep
+    print(
+        f"\nOlostep: {spend.calls} calls, {spend.credits} credits, "
+        f"{spend.answered_from_cache} answered from cache."
+    )
+
+
+async def _search(args: argparse.Namespace) -> int:
+    profile = _load_profile(args.profile)
+    if profile is None:
         return 2
     try:
         report = await match.find_companies(

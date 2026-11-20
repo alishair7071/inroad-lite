@@ -161,6 +161,30 @@ best role and how many of its roles fit.
 `--relaxed` keeps the role rules and drops location and level, and labels
 every such match "location not checked".
 
+### Researching one company
+
+`inroad-lite research <website>` follows the steps of Inroad's research run,
+through the same boundaries:
+
+1. `api/routers/research.py` → `api/services/company_research.py` →
+   `sourcing_client.research`. The website is checked first
+   (`research_target`): no IP addresses, ports, credentials or private names.
+2. `sourcing/services/company_research.py` scrapes the homepage, picks up to
+   four of the site's own pages by kind (`discovery/website_pages.py`: about,
+   careers, product, team, customers, news) and scrapes them at once.
+3. `discovery/company_facts.py` reads facts by phrase rules (founded, size,
+   customers, funding, headquarters, social links), each kept with its
+   sentence and page. Inroad uses an LLM here; rules find less but never
+   misread.
+4. The job board comes from a link on the home or careers page
+   (`discovery/board_links.py`). Pages that load their board in the browser
+   show none, so a board named after the site is tried, and kept only when
+   its own data shows it is this company (Greenhouse's company name, or job
+   descriptions naming the site).
+5. With a profile, api runs Stage B on the open roles: same rules, same
+   score. A role whose text was not read (Greenhouse listings carry none)
+   counts its skills as unknown, not missing.
+
 ## 7. Boundaries
 
 ```mermaid
@@ -189,6 +213,7 @@ flowchart LR
 | SafeFetcher checks every resolved IP on every redirect | Fixed public job-board hosts only, no redirects |
 | Places left out, company-wide visa evidence, learned preferences from ratings | Not included |
 | Skills weighed by whether the person's work history shows them | Skills count when the posting names them |
+| Research crawls the site within a request budget and extracts facts with an LLM, with evidence | Up to four pages read through Olostep scrapes; facts by phrase rules, with evidence |
 
 ## 9. Configuration
 
@@ -205,7 +230,7 @@ flowchart LR
 ## 10. Running and testing it
 
 ```bash
-uv run pytest      # 114 tests, no key, no network
+uv run pytest      # no key, no network
 uv run ruff check . && uv run ruff format --check .
 uv run mypy        # strict
 ```

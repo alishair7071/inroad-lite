@@ -55,8 +55,13 @@ def score_role(
     posted_at: str | None,
     location: str,
     now: datetime | None = None,
+    described: bool = True,
 ) -> MatchScore:
+    """`described` is False when only the title was read: skills it does not
+    name are then unknown, not missing."""
     skill_part, matched = _skills(skills, text)
+    if not described and not matched:
+        skill_part = Part("Skills", "Posting text not read; counted as unknown", None)
     parts = [_role(targets, title), skill_part, _level(years, title), _posted(posted_at, now)]
     base = sum(
         WEIGHTS[part.name.lower()] * (_UNKNOWN if part.value is None else part.value)

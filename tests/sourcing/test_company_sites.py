@@ -59,6 +59,24 @@ def test_a_paragraph_naming_the_company_wins_and_other_scripts_are_skipped():
     assert summary_from_markdown(markdown, "Acme").startswith("Don't invest")
 
 
+def test_an_announcement_banner_is_not_a_description():
+    markdown = (
+        "GitLab Orbit is generally available. Increase agent accuracy. Read the announcement\n\n"
+        "GitLab is the DevSecOps platform where teams build, secure and ship software together.\n"
+    )
+    assert summary_from_markdown(markdown, "GitLab") == (
+        "GitLab is the DevSecOps platform where teams build, secure and ship software together."
+    )
+
+
+def test_link_markup_never_leaks_into_a_summary():
+    markdown = (
+        "Acme ships audit evidence with every change you make. [Learn [more]](/security) today.\n"
+    )
+    summary = summary_from_markdown(markdown, "Acme") or ""
+    assert "](" not in summary and "[" not in summary
+
+
 def test_a_visa_offer_is_read_and_a_negated_one_is_not():
     assert visa_sponsorship("We offer visa sponsorship for this role.") is Statement.OFFERED
     assert visa_sponsorship("We cannot provide visa sponsorship.") is Statement.NOT_OFFERED

@@ -89,10 +89,10 @@ class CandidateProver:
                 job = adapter.parse_detail(payload, job)
             except FetchError:
                 pass  # the posting is proven; only its description is missing
-        return _with_facts(job)
+        return with_facts(job)
 
 
-def _with_facts(job: Job) -> Job:
+def with_facts(job: Job) -> Job:
     """What matching needs that the board does not state as a field."""
     text = f"{job.title}\n{job.description or ''}"
     return replace(

@@ -105,22 +105,67 @@ open only in the US or Europe):
 
 Full examples are in [`examples/`](examples/).
 
+### Research one company
+
+You can also give it a single company's website:
+
+```bash
+uv run inroad-lite research yipitdata.com --profile profile.yaml
+```
+
+It follows the same steps as Inroad's company research:
+
+1. **Reads the homepage** with Olostep and picks the pages worth reading:
+   about, careers, product, team, customers, news.
+2. **Reads those pages** with Olostep (up to 4, one credit each).
+3. **Notes what the site says**: when the company was founded, its size, its
+   customers, funding, where it is based, its LinkedIn and GitHub. Each fact
+   comes with the sentence and page it was found on.
+4. **Finds its job board** and lists every open role.
+5. With `--profile`, **shows which of those roles fit you**, scored the same
+   way as a search.
+
+A shortened real result:
+
+```text
+YipitData  (yipitdata.com)
+YipitData is a fast-growing data and analytics company on a mission to give brands and ...
+
+What the website says:
+  Founded      Founded in 2013
+               "2013Founded in New York City 650+Customers across brands and investors ..."
+               source: https://yipitdata.com/about
+  Team size    750+ people
+               "We're 750+ people across the globe, focused on one thing ..."
+               source: https://yipitdata.com/about
+  Customers    650+ customers
+               ...
+
+Open roles: 40 on greenhouse: yipitdata
+```
+
+Inroad reads company pages with an AI model. inroad-lite uses simple rules
+instead, so it finds fewer facts, but never one the site does not plainly
+say.
+
 ## Where Olostep is used
 
 Every call to Olostep goes through **one file**, so it is easy to see exactly
-how Olostep is used. There are three kinds of call:
+how Olostep is used. There are four kinds of call:
 
 ```mermaid
 flowchart LR
     find["Finding companies"]
     site["Finding a company's website"]
     read["Describing a company"]
+    research["Researching one company"]
     client["olostep.py<br/>the one file that<br/>talks to Olostep"]
     olostep["Olostep"]
 
     find -- "search" --> client
     site -- "search" --> client
     read -- "scrape" --> client
+    research -- "scrape" --> client
     client --> olostep
 ```
 
@@ -130,10 +175,12 @@ flowchart LR
 | Writes the job searches sent to Olostep | [`sourcing/discovery/company_candidates.py`](src/inroad_lite/sourcing/discovery/company_candidates.py) |
 | Runs those searches, several at once, to find companies | [`sourcing/services/company_discovery.py`](src/inroad_lite/sourcing/services/company_discovery.py) |
 | Finds a company's website with a search, then reads its homepage with a scrape | [`sourcing/services/company_profile.py`](src/inroad_lite/sourcing/services/company_profile.py) |
+| Researches one company: reads its homepage and its about, careers and other pages with scrapes | [`sourcing/services/company_research.py`](src/inroad_lite/sourcing/services/company_research.py) |
 | Sets Olostep up with your key, the time limit, and a cache so repeat runs cost nothing | [`sourcing/api/dependencies.py`](src/inroad_lite/sourcing/api/dependencies.py) |
 
 A full search costs about 20 to 40 Olostep credits (5 per search, 1 per page
-read). Answers are saved for 6 hours, so running it again costs nothing.
+read); researching one company about 5. Answers are saved for 6 hours, so
+running the same thing again costs nothing.
 
 ## Try it
 
@@ -199,7 +246,15 @@ should see.
    uv run inroad-lite search profile.yaml --json results/me.json
    ```
 
-7. **Run the automated tests.** No key and no internet needed: they use a
+7. **Research one company.**
+   ```bash
+   uv run inroad-lite research yipitdata.com --profile profile.example.yaml
+   ```
+   You get a short description, what the website says (each fact with its
+   source page), the company's open roles, and which of them fit the profile.
+   Try a company you know, too.
+
+8. **Run the automated tests.** No key and no internet needed: they use a
    pretend Olostep and pretend job boards.
    ```bash
    uv run pytest
