@@ -10,18 +10,7 @@
     --bg: #f7f7f5; --card: #ffffff; --ink: #1d1d1b; --muted: #6b6b66; --line: #e3e2dd;
     --accent: #2f5d50; --accent-ink: #ffffff; --soft: #eef3f1; --bad: #a33a2a;
     --strong: #2f6b3a; --good: #3d6491; --fair: #8a6d1f;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #151614; --card: #1e201d; --ink: #ecebe6; --muted: #a2a19a; --line: #34362f;
-      --accent: #7fb8a4; --accent-ink: #10201b; --soft: #24302b; --bad: #ef8f7f;
-      --strong: #8fd09a; --good: #9cbbe6; --fair: #e0c470;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #151614; --card: #1e201d; --ink: #ecebe6; --muted: #a2a19a; --line: #34362f;
-    --accent: #7fb8a4; --accent-ink: #10201b; --soft: #24302b; --bad: #ef8f7f;
-    --strong: #8fd09a; --good: #9cbbe6; --fair: #e0c470;
+    color-scheme: light;
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink);
@@ -41,7 +30,7 @@
   .tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
   label { display: block; font-weight: 600; font-size: 13px; margin: 12px 0 4px; }
   label .note { font-weight: 400; }
-  input[type=text], input[type=password], input[type=number], textarea {
+  input[type=text], input[type=number], textarea {
     width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: 7px;
     background: var(--bg); color: var(--ink); font: inherit; }
   textarea { resize: vertical; min-height: 40px; }
@@ -70,13 +59,10 @@
   ul.plain { margin: 6px 0; padding-left: 18px; }
   .fact { margin-top: 10px; }
   .fact blockquote { margin: 2px 0; padding-left: 10px; border-left: 3px solid var(--line); color: var(--muted); font-size: 14px; }
-  .theme { float: right; font-size: 13px; background: none; border: 1px solid var(--line); color: var(--muted);
-           border-radius: 6px; padding: 4px 8px; cursor: pointer; }
 </style>
 </head>
 <body>
 <main>
-  <button class="theme" id="theme" type="button">Theme</button>
   <h1>inroad-lite</h1>
   <p class="lede">Tell it the jobs you want. It finds companies hiring for them right now, checks every
     opening is real, and ranks them by how well they fit you, with the reason for each one.
@@ -92,9 +78,6 @@
     <div id="research-fields" class="hidden">
       <label for="website">Company website <span class="note">for example gitlab.com</span></label>
       <input type="text" id="website" autocomplete="off" placeholder="yipitdata.com">
-      <div class="checks spaced">
-        <label><input type="checkbox" id="use-profile" checked> Also show which of its roles fit me</label>
-      </div>
     </div>
 
     <div id="profile-fields">
@@ -129,7 +112,7 @@ DevOps Engineer</textarea>
     </div>
 
     <label for="code">Access code <span class="note">each run spends Olostep credits, so the site needs a code</span></label>
-    <input type="password" id="code" autocomplete="off">
+    <input type="text" id="code" autocomplete="off" spellcheck="false">
 
     <div class="row">
       <button class="go" id="go" type="submit">Find companies</button>
@@ -154,15 +137,6 @@ DevOps Engineer</textarea>
     set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   };
 
-  var theme = store.get("theme");
-  if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
-  $("theme").addEventListener("click", function () {
-    var current = document.documentElement.dataset.theme;
-    var dark = current ? current === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
-    document.documentElement.dataset.theme = dark ? "light" : "dark";
-    store.set("theme", document.documentElement.dataset.theme);
-  });
-
   // The form is remembered on this browser only.
   var FIELDS = ["roles", "skills", "location", "years", "places", "website"];
   try {
@@ -183,18 +157,16 @@ DevOps Engineer</textarea>
     $("tab-search").setAttribute("aria-selected", String(next === "search"));
     $("tab-research").setAttribute("aria-selected", String(next === "research"));
     $("research-fields").classList.toggle("hidden", next !== "research");
-    syncProfile();
+    $("profile-fields").classList.toggle("hidden", next === "research");
+    $("results").textContent = "";
+    status("");
     $("go").textContent = next === "search" ? "Find companies" : "Research company";
     $("cost").textContent = next === "search"
       ? "Takes up to a minute. About 20 to 40 Olostep credits."
       : "Takes about half a minute. About 5 Olostep credits.";
   }
-  function syncProfile() {
-    $("profile-fields").classList.toggle("hidden", mode === "research" && !$("use-profile").checked);
-  }
   $("tab-search").addEventListener("click", function () { setMode("search"); });
   $("tab-research").addEventListener("click", function () { setMode("research"); });
-  $("use-profile").addEventListener("change", syncProfile);
 
   function list(text) {
     return text.split(/[\n,]/).map(function (s) { return s.trim(); }).filter(Boolean);
@@ -368,9 +340,7 @@ DevOps Engineer</textarea>
       path = "/api/research";
       var site = $("website").value.trim();
       if (!site) { status("Enter the company's website, for example gitlab.com.", true); return; }
-      var withProfile = $("use-profile").checked;
-      body = { website: site, profile: withProfile ? readProfile() : null,
-               relaxed: withProfile && $("relaxed").checked };
+      body = { website: site };
     }
     $("results").textContent = "";
     $("go").disabled = true;
