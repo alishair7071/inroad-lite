@@ -100,8 +100,8 @@ DevOps Engineer</textarea>
       <label>How you want to work</label>
       <div class="checks" id="prefs">
         <label><input type="checkbox" value="remote" checked> Remote</label>
-        <label><input type="checkbox" value="onsite"> Onsite</label>
-        <label><input type="checkbox" value="hybrid"> Hybrid</label>
+        <label><input type="checkbox" value="onsite" checked> Onsite</label>
+        <label><input type="checkbox" value="hybrid" checked> Hybrid</label>
         <label><input type="checkbox" value="relocation" checked> Relocate</label>
       </div>
       <label for="places">Places you would move to <span class="note">for relocation, up to 4, comma separated</span></label>
@@ -140,7 +140,7 @@ DevOps Engineer</textarea>
   // The form is remembered on this browser only.
   var FIELDS = ["roles", "skills", "location", "years", "places", "website"];
   try {
-    var saved = JSON.parse(store.get("form") || "null");
+    var saved = JSON.parse(store.get("form-v2") || "null");
     if (saved) {
       FIELDS.forEach(function (k) { if (typeof saved[k] === "string") $(k).value = saved[k]; });
       if (Array.isArray(saved.prefs)) {
@@ -176,7 +176,7 @@ DevOps Engineer</textarea>
     document.querySelectorAll("#prefs input:checked").forEach(function (b) { prefs.push(b.value); });
     var remember = { prefs: prefs };
     FIELDS.forEach(function (k) { remember[k] = $(k).value; });
-    store.set("form", JSON.stringify(remember));
+    store.set("form-v2", JSON.stringify(remember));
     var years = $("years").value.trim();
     var out = {
       roles: list($("roles").value).slice(0, 4),
