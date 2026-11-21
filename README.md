@@ -7,6 +7,10 @@ checks every opening is real, and ranks them by how well they fit you, with
 the reason for each one.** It uses [Olostep](https://olostep.com) to search
 the web and read company websites.
 
+**Try it live: [inroad-lite.vercel.app](https://inroad-lite.vercel.app)**
+Each run spends Olostep credits, so the page asks for an access code. Ask the
+owner for one, or run it yourself with your own key (see **Try it** below).
+
 ## What this project is
 
 [Inroad](https://inroad-web.vercel.app/) is a platform that helps people find
@@ -220,7 +224,9 @@ tests without a key.
 ## Use it in the browser
 
 inroad-lite also has a simple web page with the same two features: find
-companies, and research one company. Start it on your computer:
+companies, and research one company. It is live at
+[inroad-lite.vercel.app](https://inroad-lite.vercel.app). To start it on
+your own computer:
 
 ```bash
 uv run uvicorn main:app --port 8010
